@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QTextEdit>
 #include <QTextStream>
+#include <QTimer>
 
 #ifndef CLASSES_H
 #define CLASSES_H
@@ -68,13 +69,19 @@ private:
 };
 
 
-class Device
+class Device : public QObject
 {
+  Q_OBJECT
 public:
     int ID;
+    int state = 0;
+    Device();
 
-    void readPort();
+protected slots:
+    virtual void readState() = 0;
 
+protected:
+    QTimer * timer;
 
 };
 
@@ -82,10 +89,12 @@ public:
 
 class Head : public Device
 {
+  Q_OBJECT
 public:
+  Head();
 
-    Head();
-
+protected slots:
+  void readState();
 };
 
 
@@ -153,7 +162,7 @@ private:
 class Driver
 {
 public:
-    Driver();
+    virtual void execute(Device * device, QString &command) = 0;
     int ID;
     QVector<QString> functions;
     int portNumber;
@@ -167,9 +176,10 @@ class HeadDriver : public Driver
 public:
 
     HeadDriver();
-    void blink();
-    void light_on();
-    void light_off();
+    void execute(Device * device, QString &command);
+    void blink(Device * device);
+    void light_on(Device * device);
+    void light_off(Device * device);
 };
 
 
@@ -181,10 +191,9 @@ public:
 	DriverLibrary(Controller* par);
 
 private:
-	QVector<Driver *> drivers = {new HeadDriver};	
+	QVector<Driver *> drivers = {new HeadDriver};
 	Controller * controller;
 };
 
 
 #endif // CLASSES_H
-

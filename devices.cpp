@@ -24,10 +24,25 @@ void DeviceManager::disconnectDevice(int port){
 
 }
 
+Device::Device(){
+
+  this->timer = new QTimer(this);
+  connect(this->timer, SIGNAL(timeout()), this, SLOT(readState()));
+  timer->start(1000);
+
+}
 
 Head::Head()
 {
 
     this->ID = 10000;
+
+}
+
+void Head::readState(){
+
+  QTextStream out(stdout);
+  out << this->state << endl;
+
 
 }
