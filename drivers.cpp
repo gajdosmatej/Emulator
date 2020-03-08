@@ -9,7 +9,7 @@ HeadDriver::HeadDriver()
 
 }
 
-void HeadDriver::execute(Device * device, QString &command){
+void HeadDriver::execute(Device * device, QString command){
 
   if(command == "blink") this->blink(device);
   if(command == "light_on") this->light_on(device);
@@ -36,7 +36,7 @@ void HeadDriver::blink(Device * device){
 }
 
 
-bool DriverLibrary::existCommand(int pinNum, QString &command){
+bool DriverLibrary::existCommand(int pinNum, QString command){
 
 	if(this->controller->PORTS[pinNum]->device == nullptr){	return false;	}
 	else{
@@ -62,7 +62,7 @@ bool DriverLibrary::existCommand(int pinNum, QString &command){
 	}
 }
 
-void DriverLibrary::doCommand(int pinNum, QString &command){
+void DriverLibrary::doCommand(int pinNum, QString command){
 
     int id = this->controller->PORTS[pinNum]->device->ID;
 
