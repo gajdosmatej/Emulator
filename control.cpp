@@ -12,10 +12,11 @@ Controller::Controller(Editor * editor, Compiler * comp){
 
 void Controller::loadText(){
 
-    QString code = this->window->getText();
+    Code * code = new Code(this->window->getText());
     this->compiler->validate(code);
 }
 
+int Controller::getNumberOfPorts(){ return this->portsNumber; }
 
 Port::Port()
 {
