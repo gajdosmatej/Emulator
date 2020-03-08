@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <QVector>
+#include <QList>
 #include <QWidget>
 #include <QTextEdit>
 #include <QTextStream>
@@ -13,6 +14,22 @@
 
 class DriverLibrary;
 class Controller;
+
+
+class Code{
+
+public:
+  Code(QString code);
+  QList<QString> parse();
+  QString getCode();
+  int getPortNumber(QString rawCommand);
+  QString getCommand(QString rawCommand);
+
+private:
+  QString rawCode;
+
+};
+
 
 class MainWindow : public QMainWindow
 {
@@ -36,7 +53,7 @@ public:
     Editor(QWidget * par, int left, int top, int w, int h);
     Editor();
     void readOnly();
-    void setText(QString &text);
+    void setText(QString text);
     QString getText();
 
 protected:
@@ -58,7 +75,7 @@ public:
 
     CompileButton(int left, int top, int w, int h, QWidget * par);
     void show();
-    void setText(const QString &text);
+    void setText(const QString text);
 
 signals:
     void clicked(); //kliknuto na *me
@@ -113,11 +130,15 @@ class Compiler
 {
 public:
     Compiler(Editor * editor);
-    void validate(QString &code);
+    void validate(Code *code);
     Controller * controller;
 
 private:
 	Editor * window;
+  QVector<QString> Errors = {"OK", "Syntax error", "Command does not exist", "Invalid data type", "Port does not exist"};
+
+  int getErrorID(Code * code, QString rawCommand);
+  QString deleteSpaces(QString command);
 };
 
 
@@ -133,6 +154,7 @@ public:
 
 public slots:
     void loadText();   //zapocni nacteni kodu, validaci etc.
+    int getNumberOfPorts();
 
 private:
     int portsNumber = 8;
@@ -162,7 +184,7 @@ private:
 class Driver
 {
 public:
-    virtual void execute(Device * device, QString &command) = 0;
+    virtual void execute(Device * device, QString command) = 0;
     int ID;
     QVector<QString> functions;
     int portNumber;
@@ -176,7 +198,7 @@ class HeadDriver : public Driver
 public:
 
     HeadDriver();
-    void execute(Device * device, QString &command);
+    void execute(Device * device, QString command);
     void blink(Device * device);
     void light_on(Device * device);
     void light_off(Device * device);
@@ -186,8 +208,8 @@ public:
 class DriverLibrary{
 
 public:
-	bool existCommand(int pinNumber, QString &command);
-	void doCommand(int pinNumber, QString &command);
+	bool existCommand(int pinNumber, QString command);
+	void doCommand(int pinNumber, QString command);
 	DriverLibrary(Controller* par);
 
 private:
