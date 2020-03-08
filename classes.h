@@ -20,7 +20,7 @@ class Code{
 
 public:
   Code(QString code);
-  QList<QString> parse();
+  QVector<QString> parse();
   QString getCode();
   int getPortNumber(QString rawCommand);
   QString getCommand(QString rawCommand);
@@ -124,7 +124,19 @@ public:
 };
 
 
+class SystemLibrary{
 
+public:
+  bool existCommand(QString command);
+  void doCommand(QString command);
+  void delay();
+  SystemLibrary(Controller * IC);
+
+private:
+  QVector<QString> functions = {"delay"};
+  Controller * controller;
+
+};
 
 class Compiler
 {
@@ -148,7 +160,8 @@ class Controller : public QObject
 Q_OBJECT
 public:
 
-	DriverLibrary * driverLibrary;
+	  DriverLibrary * driverLibrary;
+    SystemLibrary * systemLibrary;
     QVector<Port *> PORTS;
     Controller(Editor * editor, Compiler * comp);
 
