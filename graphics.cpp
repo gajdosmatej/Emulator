@@ -42,7 +42,7 @@ void CompileButton::show(){
 
 }
 
-void CompileButton::setText(const QString &text){
+void CompileButton::setText(const QString text){
 
     this->me->setText(text);
 
@@ -75,7 +75,7 @@ void Editor::readOnly(){
 
 }
 
-void Editor::setText(QString &text){    this->me->setText(text);    }
+void Editor::setText(QString text){    this->me->setText(text);    }
 
 QString Editor::getText(){  return this->me->toPlainText(); }
 
