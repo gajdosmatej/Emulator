@@ -55,17 +55,6 @@ QString Code::getCommand(QString rawCommand){
 
 }
 
-void Compiler::callQueue(QVector<Call*> queue, int position){
-
-  int len = queue.size();
-
-  if(position < len){
-
-    queue[position]->doCommand();
-    this->callQueue(queue, ++position);
-
-  }
-}
 
 void Compiler::print(QString message){
 
@@ -125,17 +114,18 @@ void Compiler::validate(Code * code){
   QVector<QString> codeList = code->parse();
   int len = codeList.length();
 
-  QVector<Call*> queue;
+  QVector<Call*> queueVector;
 
   for(int i = 0; i < len; ++i){
 
     codeList[i] = this->deleteSpaces(codeList[i]);
-    queue.append( createCall(code, codeList[i]) );
+    queueVector.append( createCall(code, codeList[i]) );
 
   }
 
   this->window->setText("");
 
-  this->callQueue(queue, 0);
+  Queue * queue = new Queue(queueVector, 0);
+  queue->callQueue();
 
 }

@@ -16,12 +16,13 @@ class DriverLibrary;
 class Controller;
 class SystemLibrary;
 class Compiler;
+class Queue;
 
 class Call{
 
 public:
   Call();
-  virtual void doCommand() = 0;
+  virtual void doCommand(Queue * queue) = 0;
 
 protected:
   QString command;
@@ -31,7 +32,7 @@ class DriverCall : public Call{
 
 public:
   DriverCall(DriverLibrary * driverLib, QString com, int portNum);
-  void doCommand();
+  void doCommand(Queue * queue);
 
 private:
   DriverLibrary * driverLibrary;
@@ -43,7 +44,7 @@ class SystemCall : public Call{
 
 public:
   SystemCall(SystemLibrary * sysLib, QString com);
-  void doCommand();
+  void doCommand(Queue * queue);
 
 private:
   SystemLibrary * systemLibrary;
@@ -54,7 +55,7 @@ class ErrorCall : public Call{
 
 public:
   ErrorCall(Compiler * comp, QString message, QString com);
-  void doCommand();
+  void doCommand(Queue * queue);
 
 private:
   Compiler * compiler;
@@ -160,8 +161,8 @@ class SystemLibrary{
 
 public:
   bool existCommand(QString command);
-  void doCommand(QString command);
-  void delay();
+  void doCommand(QString command, Queue * queue);
+  void delay(Queue * queue);
   SystemLibrary(Controller * IC, Editor * w);
 
 private:
@@ -251,5 +252,18 @@ private:
   Editor * window;
 };
 
+class Queue : public QObject{
+Q_OBJECT
+public:
+  Queue(QVector<Call*> qu, int pos);
+
+public slots:
+  void callQueue();
+
+private:
+  QVector<Call*> queue;
+  int position;
+
+};
 
 #endif // CLASSES_H

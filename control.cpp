@@ -1,5 +1,22 @@
 #include "classes.h"
 
+Queue::Queue(QVector<Call*> qu, int pos){
+
+  this->queue = qu;
+  this->position = pos;
+
+}
+
+void Queue::callQueue(){
+
+  int len = this->queue.size();
+
+  if(this->position < len){
+
+    this->queue[this->position++]->doCommand(this);
+  }
+}
+
 Call::Call(){}
 
 SystemCall::SystemCall(SystemLibrary * sysLib, QString com){
@@ -9,9 +26,9 @@ SystemCall::SystemCall(SystemLibrary * sysLib, QString com){
 
 }
 
-void SystemCall::doCommand(){
+void SystemCall::doCommand(Queue * queue){
 
-  this->systemLibrary->doCommand(this->command);
+  this->systemLibrary->doCommand(this->command, queue);
 
 }
 
@@ -23,9 +40,11 @@ DriverCall::DriverCall(DriverLibrary * driverLib, QString com, int portNum){
 
 }
 
-void DriverCall::doCommand(){
+void DriverCall::doCommand(Queue * queue){
 
   this->driverLibrary->doCommand(this->portNumber, this->command);
+
+  queue->callQueue();
 
 }
 
@@ -37,10 +56,12 @@ ErrorCall::ErrorCall(Compiler * comp, QString message, QString com){
 
 }
 
-void ErrorCall::doCommand(){
+void ErrorCall::doCommand(Queue * queue){
 
   QString err = this->errorMessage + " (in: \"" + this->command + "\")";
   this->compiler->print(err);
+
+  queue->callQueue();
 
 }
 
@@ -69,7 +90,7 @@ Port::Port()
 
 }
 
-SystemLibrary::SystemLibrary(Controller * IC, Editor * w){  
+SystemLibrary::SystemLibrary(Controller * IC, Editor * w){
 
   this->controller = IC;
   this->window = w;
@@ -88,16 +109,19 @@ bool SystemLibrary::existCommand(QString command){
   return false;
 }
 
-void SystemLibrary::doCommand(QString command){
+void SystemLibrary::doCommand(QString command, Queue * queue){
 
-  if(command == "delay"){ this->delay();  }
+  QString winText = this->window->getText() + "DO SYSCALL " + command + ";\n";
+  this->window->setText(winText);
+
+  if(command == "delay"){ this->delay(queue);  }
+  else{ queue->callQueue(); }
 
 }
 
-void SystemLibrary::delay(){
+void SystemLibrary::delay(Queue * queue){
 
-  QTextStream out(stdout);
-  out << "yee"<< endl;
 
+  QTimer::singleShot(1000, queue, SLOT(callQueue()));
 
 }

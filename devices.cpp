@@ -30,7 +30,7 @@ Device::Device(Editor * w){
 
   this->timer = new QTimer(this);
   connect(this->timer, SIGNAL(timeout()), this, SLOT(readState()));
-  timer->start(1000);
+  timer->start(50);
 
 }
 
@@ -54,7 +54,7 @@ void Head::readState(){
     case 1:
       printedText = "*LIGHTING*";
       break;
-      
+
   }
   this->window->setText(printedText);
 

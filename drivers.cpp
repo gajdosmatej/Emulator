@@ -71,6 +71,7 @@ void DriverLibrary::doCommand(int pinNum, QString command){
 			//driver ma spravne id
 			if(this->drivers[i]->ID == id){
 
+        //text do driver window
         QString winText = this->window->getText() + "DO " + command + " ON " + QString::number(pinNum) + ";\n";
         this->window->setText(winText);
 
