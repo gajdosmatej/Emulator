@@ -14,7 +14,53 @@
 
 class DriverLibrary;
 class Controller;
+class SystemLibrary;
+class Compiler;
 
+class Call{
+
+public:
+  Call();
+  virtual void doCommand() = 0;
+
+protected:
+  QString command;
+};
+
+class DriverCall : public Call{
+
+public:
+  DriverCall(DriverLibrary * driverLib, QString com, int portNum);
+  void doCommand();
+
+private:
+  DriverLibrary * driverLibrary;
+  int portNumber;
+
+};
+
+class SystemCall : public Call{
+
+public:
+  SystemCall(SystemLibrary * sysLib, QString com);
+  void doCommand();
+
+private:
+  SystemLibrary * systemLibrary;
+
+};
+
+class ErrorCall : public Call{
+
+public:
+  ErrorCall(Compiler * comp, QString message, QString com);
+  void doCommand();
+
+private:
+  Compiler * compiler;
+  QString errorMessage;
+
+};
 
 class Code{
 
@@ -30,9 +76,7 @@ private:
 
 };
 
-
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow{
     Q_OBJECT
 
 public:
@@ -42,10 +86,7 @@ public:
     ~MainWindow();
 };
 
-
-
-class Editor : public QWidget
-{
+class Editor : public QWidget{
     Q_OBJECT
 public:
     int x, y, width, height;
@@ -56,6 +97,9 @@ public:
     void setText(QString text);
     QString getText();
 
+public slots:
+  void clear();
+  
 protected:
     QTextEdit * me;
     QWidget * parent;
@@ -64,11 +108,7 @@ private:
     void show();
 };
 
-
-
-
-class CompileButton : public QObject
-{
+class CompileButton : public QObject{
 Q_OBJECT
 public:
     int x, y, width, height;
@@ -85,9 +125,7 @@ private:
     QWidget * parent;
 };
 
-
-class Device : public QObject
-{
+class Device : public QObject{
   Q_OBJECT
 public:
     int ID;
@@ -102,10 +140,7 @@ protected:
 
 };
 
-
-
-class Head : public Device
-{
+class Head : public Device{
   Q_OBJECT
 public:
   Head();
@@ -114,15 +149,11 @@ protected slots:
   void readState();
 };
 
-
-
-class Port
-{
+class Port{
 public:
     Device * device = nullptr;
     Port();
 };
-
 
 class SystemLibrary{
 
@@ -130,40 +161,39 @@ public:
   bool existCommand(QString command);
   void doCommand(QString command);
   void delay();
-  SystemLibrary(Controller * IC);
+  SystemLibrary(Controller * IC, Editor * w);
 
 private:
   QVector<QString> functions = {"delay"};
   Controller * controller;
+  Editor * window;
 
 };
 
-class Compiler
-{
+class Compiler{
 public:
     Compiler(Editor * editor);
     void validate(Code *code);
     Controller * controller;
+    void print(QString message);
 
 private:
 	Editor * window;
   QVector<QString> Errors = {"OK", "Syntax error", "Command does not exist", "Invalid data type", "Port does not exist"};
 
-  int getErrorID(Code * code, QString rawCommand);
+  Call * createCall(Code * code, QString rawCommand);
   QString deleteSpaces(QString command);
+  void callQueue(QVector<Call*> queue, int position);
 };
 
-
-
-class Controller : public QObject
-{
+class Controller : public QObject{
 Q_OBJECT
 public:
 
 	  DriverLibrary * driverLibrary;
     SystemLibrary * systemLibrary;
     QVector<Port *> PORTS;
-    Controller(Editor * editor, Compiler * comp);
+    Controller(Editor * editor, Compiler * comp, Editor * driverWindow);
 
 public slots:
     void loadText();   //zapocni nacteni kodu, validaci etc.
@@ -176,11 +206,7 @@ private:
 
 };
 
-
-
-
-class DeviceManager
-{
+class DeviceManager{
 public:
     DeviceManager(Controller * IC);
     int numberOfDevices();
@@ -192,10 +218,7 @@ private:
     QVector<int> ports = {0, 0, 0, 0, 0, 0, 0, 0};
 };
 
-
-
-class Driver
-{
+class Driver{
 public:
     virtual void execute(Device * device, QString command) = 0;
     int ID;
@@ -204,10 +227,7 @@ public:
 
 };
 
-
-
-class HeadDriver : public Driver
-{
+class HeadDriver : public Driver{
 public:
 
     HeadDriver();
@@ -217,17 +237,17 @@ public:
     void light_off(Device * device);
 };
 
-
 class DriverLibrary{
 
 public:
 	bool existCommand(int pinNumber, QString command);
 	void doCommand(int pinNumber, QString command);
-	DriverLibrary(Controller* par);
+	DriverLibrary(Controller* par, Editor * w);
 
 private:
 	QVector<Driver *> drivers = {new HeadDriver};
 	Controller * controller;
+  Editor * window;
 };
 
 

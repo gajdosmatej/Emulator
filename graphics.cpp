@@ -62,6 +62,8 @@ Editor::Editor(QWidget * par, int l, int t, int w, int h)
 
 }
 
+void Editor::clear(){ this->setText("");  }
+
 void Editor::show(){
 
     this->me->show();

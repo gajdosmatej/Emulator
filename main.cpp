@@ -59,9 +59,12 @@ int main(int argc, char *argv[])
 
 
     Compiler * compiler = new Compiler( new Editor(w, 300, 50, 200, 500) );
-    Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), compiler);
-	compiler->controller = controller;
+    Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), compiler, driverWindow);
+	   compiler->controller = controller;
 
+     QObject::connect(compileButton, &CompileButton::clicked, compilerWindow, &Editor::clear);
+     QObject::connect(compileButton, &CompileButton::clicked, driverWindow, &Editor::clear);
+     QObject::connect(compileButton, &CompileButton::clicked, deviceWindow, &Editor::clear);
     //propojeni tlacitka a radice
     QObject::connect(compileButton, &CompileButton::clicked, controller, &Controller::loadText);
 

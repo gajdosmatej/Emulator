@@ -55,32 +55,47 @@ QString Code::getCommand(QString rawCommand){
 
 }
 
-int Compiler::getErrorID(Code * code, QString rawCommand){
+void Compiler::callQueue(QVector<Call*> queue, int position){
 
-  //-1 -> systemovy prikaz
-  //0 -> v poradku
-  //1 -> chybna syntaxe
-  //2 -> prikaz neexistuje
-  //3 -> chybny datovy typ
-  //4 -> port neexistuje
+  int len = queue.size();
 
-  //systemovy prikaz
-  if(this->controller->systemLibrary->existCommand(rawCommand)) return -1;
+  if(position < len){
 
-  if( rawCommand.left(1) != "[" ){  return 1; }
+    queue[position]->doCommand();
+    this->callQueue(queue, ++position);
 
-  int portNumber = code->getPortNumber(rawCommand);
-  if( portNumber == -1 ){  return 3; }
-  if( portNumber == -2){  return 1; }
-  if(portNumber > (this->controller->getNumberOfPorts() - 1)){ return 4; }
-  if(portNumber < 0){ return 4; }
+  }
+}
 
-  QString command = code->getCommand(rawCommand);
-  if( !this->controller->driverLibrary->existCommand(portNumber, command) ){  return 2; }
+void Compiler::print(QString message){
 
-  return 0;
+  this->window->setText(this->window->getText() + message + "\n");
 
 }
+
+
+Call* Compiler::createCall(Code * code, QString rawCommand){
+
+  QString command = code->getCommand(rawCommand);
+
+  if(command == 0){ return new ErrorCall(this, this->Errors[1], rawCommand);  }
+  if(this->controller->systemLibrary->existCommand(rawCommand)){  return new SystemCall(this->controller->systemLibrary, command); }
+
+  if( rawCommand.left(1) != "[" ){  return new ErrorCall(this, this->Errors[1], rawCommand); }
+
+  int portNumber = code->getPortNumber(rawCommand);
+  if( portNumber == -1 ){  return new ErrorCall(this, this->Errors[3], rawCommand); }
+  if( portNumber == -2){  return new ErrorCall(this, this->Errors[1], rawCommand); }
+  if(portNumber > (this->controller->getNumberOfPorts() - 1)){ return new ErrorCall(this, this->Errors[4], rawCommand); }
+  if(portNumber < 0){ return new ErrorCall(this, this->Errors[4], rawCommand); }
+
+  if( !this->controller->driverLibrary->existCommand(portNumber, command) ){  return new ErrorCall(this, this->Errors[2], rawCommand); }
+
+  return new DriverCall(this->controller->driverLibrary, command, portNumber);
+
+
+}
+
 
 QString Compiler::deleteSpaces(QString command){
 
@@ -103,60 +118,24 @@ QString Compiler::deleteSpaces(QString command){
 
 }
 
+
+
 void Compiler::validate(Code * code){
 
   QVector<QString> codeList = code->parse();
-
-  QVector<QVector<QString>> query;
-
   int len = codeList.length();
-  this->window->setText("");
 
-  bool ok = true;
+  QVector<Call*> queue;
 
   for(int i = 0; i < len; ++i){
 
     codeList[i] = this->deleteSpaces(codeList[i]);
-    QString command = codeList.at(i);
+    queue.append( createCall(code, codeList[i]) );
 
-    QString message = this->window->getText() + "Command " + QString::number(i) + ": ";
-    int errorID = this->getErrorID(code, command);
-
-    //drivery
-    if(errorID != -1){
-
-      message += this->Errors[errorID] + "\n";
-      this->window->setText(message);
-
-      if(errorID != 0){ ok = false; }
-
-      QVector<QString> queryFunc = {command, "Driver"};
-      query.append(queryFunc);
-
-    }
-    //system
-    else{
-
-      this->window->setText(message + this->Errors[0] + "\n");
-      QVector<QString> queryFunc = {command, "System"};
-      query.append(queryFunc);
-
-    }
   }
 
-  if(ok){
+  this->window->setText("");
 
-    for(int i = 0; i < len; ++i){
+  this->callQueue(queue, 0);
 
-      QString command = query[i][0];
-      QString call = query[i][1];
-
-      if(call == "Driver"){
-        this->controller->driverLibrary->doCommand(code->getPortNumber(command), code->getCommand(command));
-      }
-      else{
-        this->controller->systemLibrary->doCommand(command);
-      }
-    }
-  }
 }
