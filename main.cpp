@@ -62,14 +62,12 @@ int main(int argc, char *argv[])
     Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), compiler, driverWindow);
 	   compiler->controller = controller;
 
-     QObject::connect(compileButton, &CompileButton::clicked, compilerWindow, &Editor::clear);
      QObject::connect(compileButton, &CompileButton::clicked, driverWindow, &Editor::clear);
-     QObject::connect(compileButton, &CompileButton::clicked, deviceWindow, &Editor::clear);
     //propojeni tlacitka a radice
     QObject::connect(compileButton, &CompileButton::clicked, controller, &Controller::loadText);
 
     DeviceManager * deviceManager = new DeviceManager(controller);
-    deviceManager->connectDevice(new Head, 2);
+    deviceManager->connectDevice(new Head(deviceWindow), 2);
     //deviceManager->disconnectDevice(3);
 
 

@@ -99,7 +99,7 @@ public:
 
 public slots:
   void clear();
-  
+
 protected:
     QTextEdit * me;
     QWidget * parent;
@@ -130,20 +130,21 @@ class Device : public QObject{
 public:
     int ID;
     int state = 0;
-    Device();
+    Device(Editor * w);
 
 protected slots:
     virtual void readState() = 0;
 
 protected:
     QTimer * timer;
+    Editor * window;
 
 };
 
 class Head : public Device{
   Q_OBJECT
 public:
-  Head();
+  Head(Editor * w);
 
 protected slots:
   void readState();

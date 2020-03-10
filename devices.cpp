@@ -24,7 +24,9 @@ void DeviceManager::disconnectDevice(int port){
 
 }
 
-Device::Device(){
+Device::Device(Editor * w){
+
+  this->window = w;
 
   this->timer = new QTimer(this);
   connect(this->timer, SIGNAL(timeout()), this, SLOT(readState()));
@@ -32,7 +34,7 @@ Device::Device(){
 
 }
 
-Head::Head()
+Head::Head(Editor * w) : Device(w)
 {
 
     this->ID = 10000;
@@ -41,8 +43,20 @@ Head::Head()
 
 void Head::readState(){
 
-  QTextStream out(stdout);
-  out << this->state << endl;
+  QString printedText;
+
+  switch(this->state){
+
+    case 0:
+      printedText = "*NOT LIGHTING*";
+      break;
+
+    case 1:
+      printedText = "*LIGHTING*";
+      break;
+      
+  }
+  this->window->setText(printedText);
 
 
 }
