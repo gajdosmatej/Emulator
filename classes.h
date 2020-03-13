@@ -208,14 +208,20 @@ private:
 
 };
 
-class DeviceManager{
+class DeviceManager : public QObject{
+
+Q_OBJECT
 public:
-    DeviceManager(Controller * IC);
+    DeviceManager(Editor * w, Controller * IC);
     int numberOfDevices();
     void connectDevice(Device * device, int port);
     void disconnectDevice(int port);
 
+public slots:
+  void proceed(Editor * deviceEditor);
+
 private:
+    Editor * window;
     Controller * controller;
     QVector<int> ports = {0, 0, 0, 0, 0, 0, 0, 0};
 };

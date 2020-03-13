@@ -36,15 +36,12 @@ int main(int argc, char *argv[])
     test->runTests();
 
     QApplication a(argc, argv);
-    MainWindow * w = new MainWindow(100, 100, 1050, 700);
+    MainWindow * w = new MainWindow(100, 100, 1050, 800);
     w->show();
 
 
     labels(w);
 
-
-    Editor * compilerWindow = new Editor(w, 300, 50, 200, 500);
-    compilerWindow->readOnly();
 
     Editor * driverWindow = new Editor(w, 550, 50, 200, 500);
     driverWindow->readOnly();
@@ -66,7 +63,14 @@ int main(int argc, char *argv[])
     //propojeni tlacitka a radice
     QObject::connect(compileButton, &CompileButton::clicked, controller, &Controller::loadText);
 
-    DeviceManager * deviceManager = new DeviceManager(controller);
+    DeviceManager * deviceManager = new DeviceManager(new Editor(w, 300, 650, 400, 100), controller);
+
+    CompileButton * managerButton = new CompileButton(750,670,150,60,w);
+    managerButton->setText("Spravovat zařízení");
+    managerButton->show();
+
+    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow]{ deviceManager->proceed(deviceWindow); });
+
     deviceManager->connectDevice(new Head(deviceWindow), 2);
     //deviceManager->disconnectDevice(3);
 

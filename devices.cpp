@@ -2,12 +2,19 @@
 
 
 //reference na radic
-DeviceManager::DeviceManager(Controller * IO){
+DeviceManager::DeviceManager(Editor * w, Controller * IO){
 
     this->controller = IO;
+    this->window = w;
+
 
 }
 
+void DeviceManager::proceed(Editor * deviceEditor){
+
+  this->connectDevice(new Head(deviceEditor), 0);
+
+}
 
 //dej portu v radici referenci na zarizeni
 void DeviceManager::connectDevice(Device * device, int port){
@@ -30,7 +37,7 @@ Device::Device(Editor * w){
 
   this->timer = new QTimer(this);
   connect(this->timer, SIGNAL(timeout()), this, SLOT(readState()));
-  timer->start(50);
+  timer->start(100);
 
 }
 
