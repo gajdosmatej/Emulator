@@ -1,5 +1,16 @@
 #include "classes.h"
 
+Error::Error(){
+
+  
+
+}
+
+QVector<QString> Error::getVector_string(){ return this->E_VECTOR_STRING; }
+int Error::getInt(){  return this->E_INT; }
+float Error::getFloat(){  return this->E_FLOAT; }
+QString Error::getString(){ return this->E_STRING;  }
+
 
 Queue::Queue(QVector<Call*> qu, int pos){
 
@@ -75,6 +86,7 @@ void Arguments::addArgument(QString arg){
 
 QString Arguments::getArgument(int position){
 
+  if(position >= this->argsVector.length()){  return (new Error)->getString(); }
   return this->argsVector[position];
 
 }

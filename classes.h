@@ -18,6 +18,23 @@ class SystemLibrary;
 class Compiler;
 class Queue;
 
+class Error{
+
+public:
+  QVector<QString> getVector_string();
+  int getInt();
+  float getFloat();
+  QString getString();
+  Error();
+
+private:
+  QVector<QString> E_VECTOR_STRING = {"E", "R", "R", "O", "R"};
+  int E_INT = -1000000;
+  float E_FLOAT = 74.236;
+  QString E_STRING = "dwavvxwčš§ů";
+
+};
+
 class Call{
 
 public:
