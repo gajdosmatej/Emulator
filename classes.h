@@ -63,6 +63,17 @@ private:
 
 };
 
+class Arguments{
+
+public:
+  void addArgument(QString arg);
+  QString getArgument(int position);
+
+private:
+  QVector<QString> argsVector;
+
+};
+
 class Code{
 
 public:
@@ -71,6 +82,7 @@ public:
   QString getCode();
   int getPortNumber(QString rawCommand);
   QString getCommand(QString rawCommand);
+  Arguments * getArguments(QString rawCommand);
 
 private:
   QString rawCode;

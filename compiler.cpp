@@ -1,59 +1,6 @@
 #include "classes.h"
 
-Code::Code(QString code){
 
-  this->rawCode = code;
-
-}
-
-QVector<QString> Code::parse(){
-
-  QVector<QString> vect;
-  QString tempCode = this->rawCode;
-
-  while( tempCode.contains(";") ){
-
-    int position = tempCode.indexOf(";");
-    vect.append( tempCode.mid(0, position) );
-    tempCode = tempCode.mid(position + 1);
-
-  }
-
-  return vect;
-
-}
-
-QString Code::getCode(){  return this->rawCode; }
-
-
-Compiler::Compiler(Editor * editor){
-
-    this->window = editor;
-    this->window->readOnly();
-
-}
-
-int Code::getPortNumber(QString rawCommand){
-
-  int right = rawCommand.indexOf("]");
-  if(right == -1){ return -2; } //chyba v syntaxi
-
-  rawCommand = rawCommand.mid(1, right - 1);
-
-  bool ok;
-  int portNum = rawCommand.toInt(&ok);
-
-  if(!ok){  return -1;  } //chyba v datovem typu
-  else{ return portNum; }
-
-}
-
-QString Code::getCommand(QString rawCommand){
-
-  int pos = rawCommand.indexOf("]");
-  return rawCommand.mid(pos + 1);
-
-}
 
 
 void Compiler::print(QString message){
@@ -66,8 +13,12 @@ void Compiler::print(QString message){
 Call* Compiler::createCall(Code * code, QString rawCommand){
 
   QString command = code->getCommand(rawCommand);
+  QString arg0 = code->getArguments(rawCommand)->getArgument(0);
+QTextStream out(stdout);
+out<<arg0;
 
   if(command == 0){ return new ErrorCall(this, this->Errors[1], rawCommand);  }
+
   if(this->controller->systemLibrary->existCommand(rawCommand)){  return new SystemCall(this->controller->systemLibrary, command); }
 
   if( rawCommand.left(1) != "[" ){  return new ErrorCall(this, this->Errors[1], rawCommand); }

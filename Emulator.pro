@@ -22,4 +22,5 @@ SOURCES += graphics.cpp \
            devices.cpp \
            drivers.cpp \
            main.cpp \
-           tests.cpp
+           tests.cpp \
+           supportClasses.cpp
