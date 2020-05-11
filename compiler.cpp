@@ -14,8 +14,8 @@ Call* Compiler::createCall(Code * code, QString rawCommand){
 
   QString command = code->getCommand(rawCommand);
   QString arg0 = code->getArguments(rawCommand)->getArgument(0);
-QTextStream out(stdout);
-out<<arg0;
+/*QTextStream out(stdout);
+out<<arg0;*/
 
   if(command == 0){ return new ErrorCall(this, this->Errors[1], rawCommand);  }
 

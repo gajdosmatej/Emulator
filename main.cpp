@@ -5,27 +5,22 @@
 #include <QPushButton>
 #include <QVector>
 
+void createLabel(MainWindow * w, QString name, int x, int y, int width, int height){
+
+    QLabel * label = new QLabel(w);
+    label->setText(name);
+    label->setGeometry(x, y, width, height);
+    label->show();
+
+}
+
+
 void labels(MainWindow * w){
 
-    QLabel * controllerLabel = new QLabel(w);
-    controllerLabel->setText("Řadič");
-    controllerLabel->setGeometry(140, 20, 200, 20);
-    controllerLabel->show();
-
-    QLabel * compilerLabel = new QLabel(w);
-    compilerLabel->setText("Kompilátor");
-    compilerLabel->setGeometry(370, 20, 200, 20);
-    compilerLabel->show();
-
-    QLabel * driverLabel = new QLabel(w);
-    driverLabel->setText("Ovladač");
-    driverLabel->setGeometry(620, 20, 200, 20);
-    driverLabel->show();
-
-    QLabel * deviceLabel = new QLabel(w);
-    deviceLabel->setText("Zařízení");
-    deviceLabel->setGeometry(870, 20, 200, 20);
-    deviceLabel->show();
+  createLabel(w, "Řadič", 140, 20, 200, 20);
+  createLabel(w, "Kompilátor", 370, 20, 200, 20);
+  createLabel(w, "Ovladač", 620, 20, 200, 20);
+  createLabel(w, "Zařízení", 870, 20, 200, 20);
 
 }
 
