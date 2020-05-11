@@ -12,10 +12,13 @@ float Error::getFloat(){  return this->E_FLOAT; }
 QString Error::getString(){ return this->E_STRING;  }
 
 
-Queue::Queue(QVector<Call*> qu, int pos){
+Queue::Queue(){
 
-  this->queue = qu;
-  this->position = pos;
+}
+
+void Queue::appendCommand(Call * commandCall){
+
+  this->queue.append(commandCall);
 
 }
 
@@ -97,6 +100,7 @@ Code::Code(QString code){
 
 }
 
+
 QVector<QString> Code::parse(){
 
   QVector<QString> vect;
@@ -105,7 +109,7 @@ QVector<QString> Code::parse(){
   while( tempCode.contains(";") ){
 
     int position = tempCode.indexOf(";");
-    vect.append( tempCode.mid(0, position) );
+    vect.append( tempCode.left(position) );
     tempCode = tempCode.mid(position + 1);
 
   }
@@ -113,6 +117,7 @@ QVector<QString> Code::parse(){
   return vect;
 
 }
+
 
 QString Code::getCode(){  return this->rawCode; }
 

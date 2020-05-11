@@ -290,14 +290,15 @@ private:
 class Queue : public QObject{
 Q_OBJECT
 public:
-  Queue(QVector<Call*> qu, int pos);
+  Queue();
+  void appendCommand(Call * commandCall);
 
 public slots:
   void callQueue();
 
 private:
   QVector<Call*> queue;
-  int position;
+  int position = 0;
 
 };
 

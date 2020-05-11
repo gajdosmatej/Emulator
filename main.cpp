@@ -66,6 +66,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow]{ deviceManager->proceed(deviceWindow); });
 
+
+
     deviceManager->connectDevice(new Head(deviceWindow), 2);
     //deviceManager->disconnectDevice(3);
 

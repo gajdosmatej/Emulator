@@ -62,21 +62,20 @@ QString Compiler::deleteSpaces(QString command){
 
 void Compiler::validate(Code * code){
 
-  QVector<QString> codeList = code->parse();
-  int len = codeList.length();
+  QVector<QString> commandList = code->parse();
+  int len = commandList.length();
 
-  QVector<Call*> queueVector;
+  Queue * queue = new Queue;
 
   for(int i = 0; i < len; ++i){
 
-    codeList[i] = this->deleteSpaces(codeList[i]);
-    queueVector.append( createCall(code, codeList[i]) );
+    commandList[i] = this->deleteSpaces(commandList[i]);
+    queue->appendCommand( createCall(code, commandList[i]) );
 
   }
 
   this->window->setText("");
 
-  Queue * queue = new Queue(queueVector, 0);
   queue->callQueue();
 
 }
