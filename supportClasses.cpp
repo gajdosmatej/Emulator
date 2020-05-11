@@ -94,23 +94,23 @@ QString Arguments::getArgument(int position){
 
 }
 
-Code::Code(QString code){
+Parser::Parser(QString parser){
 
-  this->rawCode = code;
+  this->rawParser = parser;
 
 }
 
 
-QVector<QString> Code::parse(){
+QVector<QString> Parser::parse(){
 
   QVector<QString> vect;
-  QString tempCode = this->rawCode;
+  QString tempParser = this->rawParser;
 
-  while( tempCode.contains(";") ){
+  while( tempParser.contains(";") ){
 
-    int position = tempCode.indexOf(";");
-    vect.append( tempCode.left(position) );
-    tempCode = tempCode.mid(position + 1);
+    int position = tempParser.indexOf(";");
+    vect.append( tempParser.left(position) );
+    tempParser = tempParser.mid(position + 1);
 
   }
 
@@ -119,17 +119,10 @@ QVector<QString> Code::parse(){
 }
 
 
-QString Code::getCode(){  return this->rawCode; }
+QString Parser::getParser(){  return this->rawParser; }
 
 
-Compiler::Compiler(Editor * editor){
-
-    this->window = editor;
-    this->window->readOnly();
-
-}
-
-int Code::getPortNumber(QString rawCommand){
+int Parser::getPortNumber(QString rawCommand){
 
   int right = rawCommand.indexOf("]");
   if(right == -1){ return -2; } //chyba v syntaxi
@@ -144,7 +137,7 @@ int Code::getPortNumber(QString rawCommand){
 
 }
 
-Arguments* Code::getArguments(QString rawCommand){
+Arguments* Parser::getArguments(QString rawCommand){
 
   int pos1 = rawCommand.indexOf("(");
   int pos2 = rawCommand.indexOf(")");
@@ -163,7 +156,7 @@ Arguments* Code::getArguments(QString rawCommand){
 }
 
 
-QString Code::getCommand(QString rawCommand){
+QString Parser::getCommand(QString rawCommand){
 
   int pos = rawCommand.indexOf("]");
   int argPos = rawCommand.indexOf("(");

@@ -10,10 +10,10 @@ void Compiler::print(QString message){
 }
 
 
-Call* Compiler::createCall(Code * code, QString rawCommand){
+Call* Compiler::createCall(Parser * parser, QString rawCommand){
 
-  QString command = code->getCommand(rawCommand);
-  QString arg0 = code->getArguments(rawCommand)->getArgument(0);
+  QString command = parser->getCommand(rawCommand);
+  QString arg0 = parser->getArguments(rawCommand)->getArgument(0);
 /*QTextStream out(stdout);
 out<<arg0;*/
 
@@ -23,7 +23,7 @@ out<<arg0;*/
 
   if( rawCommand.left(1) != "[" ){  return new ErrorCall(this, this->Errors[1], rawCommand); }
 
-  int portNumber = code->getPortNumber(rawCommand);
+  int portNumber = parser->getPortNumber(rawCommand);
   if( portNumber == -1 ){  return new ErrorCall(this, this->Errors[3], rawCommand); }
   if( portNumber == -2){  return new ErrorCall(this, this->Errors[1], rawCommand); }
   if(portNumber > (this->controller->getNumberOfPorts() - 1)){ return new ErrorCall(this, this->Errors[4], rawCommand); }
@@ -59,7 +59,7 @@ QString Compiler::deleteSpaces(QString command){
 }
 
 
-Queue * Compiler::createQueue(QVector<QString> commandList, Code * code)
+Queue * Compiler::createQueue(QVector<QString> commandList, Parser * parser)
 {
 
     int len = commandList.length();
@@ -67,7 +67,7 @@ Queue * Compiler::createQueue(QVector<QString> commandList, Code * code)
     for(int i = 0; i < len; ++i){
 
       commandList[i] = this->deleteSpaces(commandList[i]);
-      queue->appendCommand( createCall(code, commandList[i]) );
+      queue->appendCommand( createCall(parser, commandList[i]) );
 
     }
 
@@ -75,16 +75,51 @@ Queue * Compiler::createQueue(QVector<QString> commandList, Code * code)
 
 }
 
-void Compiler::validate(Code * code)
+void Compiler::validate(Parser * parser)
 {
 
-  QVector<QString> commandList = code->parse();
+  QVector<QString> commandList = parser->parse();
 
-  Queue * queue = this->createQueue(commandList, code);
+  Queue * queue = this->createQueue(commandList, parser);
 
 
   this->window->setText("");
 
   queue->callQueue();
+
+}
+
+
+Compiler::Compiler(Editor * editor){
+
+    this->window = editor;
+    this->window->readOnly();
+
+    this->errorHandler = new CompilerErrorHandler;
+
+}
+
+
+bool CompilerErrorHandler::checkSyntax(Parser * parser, QString rawCommand){
+
+  QString command = parser->getCommand(rawCommand);
+  /*QString arg0 = parser->getArguments(rawCommand)->getArgument(0);
+
+  if(command == 0){ return new ErrorCall(this, this->Errors[1], rawCommand);  }
+
+  if(this->controller->systemLibrary->existCommand(rawCommand)){  return new SystemCall(this->controller->systemLibrary, command); }
+
+  if( rawCommand.left(1) != "[" ){  return new ErrorCall(this, this->Errors[1], rawCommand); }
+
+  int portNumber = parser->getPortNumber(rawCommand);
+  if( portNumber == -1 ){  return new ErrorCall(this, this->Errors[3], rawCommand); }
+  if( portNumber == -2){  return new ErrorCall(this, this->Errors[1], rawCommand); }
+  if(portNumber > (this->controller->getNumberOfPorts() - 1)){ return new ErrorCall(this, this->Errors[4], rawCommand); }
+  if(portNumber < 0){ return new ErrorCall(this, this->Errors[4], rawCommand); }
+
+  if( !this->controller->driverLibrary->existCommand(portNumber, command) ){  return new ErrorCall(this, this->Errors[2], rawCommand); }
+
+  return new DriverCall(this->controller->driverLibrary, command, portNumber);*/
+  return true;
 
 }

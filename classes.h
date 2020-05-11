@@ -91,18 +91,18 @@ private:
 
 };
 
-class Code{
+class Parser{
 
 public:
-  Code(QString code);
+  Parser(QString parser);
   QVector<QString> parse();
-  QString getCode();
+  QString getParser();
   int getPortNumber(QString rawCommand);
   QString getCommand(QString rawCommand);
   Arguments * getArguments(QString rawCommand);
 
 private:
-  QString rawCode;
+  QString rawParser;
 
 };
 
@@ -201,19 +201,28 @@ private:
 
 };
 
+
+class CompilerErrorHandler{
+
+  bool checkSyntax(Parser * parser, QString rawCommand);
+
+};
+
+
 class Compiler{
 public:
     Compiler(Editor * editor);
-    void validate(Code *code);
+    void validate(Parser *parser);
     Controller * controller;
     void print(QString message);
-    Queue * createQueue(QVector<QString> commandList, Code * code);
+    Queue * createQueue(QVector<QString> commandList, Parser * parser);
 
 private:
 	Editor * window;
   QVector<QString> Errors = {"OK", "Syntax error", "Command does not exist", "Invalid data type", "Port does not exist"};
+  CompilerErrorHandler * errorHandler;
 
-  Call * createCall(Code * code, QString rawCommand);
+  Call * createCall(Parser * parser, QString rawCommand);
   QString deleteSpaces(QString command);
   void callQueue(QVector<Call*> queue, int position);
 };

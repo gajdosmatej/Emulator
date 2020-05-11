@@ -13,8 +13,8 @@ Controller::Controller(Editor * editor, Compiler * comp, Editor * driverWindow){
 
 void Controller::loadText(){
 
-    Code * code = new Code(this->window->getText());
-    this->compiler->validate(code);
+    Parser * parser = new Parser(this->window->getText());
+    this->compiler->validate(parser);
 }
 
 int Controller::getNumberOfPorts(){ return this->portsNumber; }
