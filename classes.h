@@ -207,6 +207,7 @@ public:
     void validate(Code *code);
     Controller * controller;
     void print(QString message);
+    Queue * createQueue(QVector<QString> commandList, Code * code);
 
 private:
 	Editor * window;
