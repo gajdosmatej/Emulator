@@ -39,7 +39,7 @@ class Call{
 
 public:
   Call();
-  virtual void doCommand(Queue * queue) = 0;
+  virtual void doCommand() = 0;
 
 protected:
   QString command;
@@ -49,7 +49,7 @@ class DriverCall : public Call{
 
 public:
   DriverCall(DriverLibrary * driverLib, QString com, int portNum);
-  void doCommand(Queue * queue);
+  void doCommand();
 
 private:
   DriverLibrary * driverLibrary;
@@ -61,7 +61,7 @@ class SystemCall : public Call{
 
 public:
   SystemCall(SystemLibrary * sysLib, QString com);
-  void doCommand(Queue * queue);
+  void doCommand();
 
 private:
   SystemLibrary * systemLibrary;
@@ -72,7 +72,7 @@ class ErrorCall : public Call{
 
 public:
   ErrorCall(Compiler * comp, QString message, QString com);
-  void doCommand(Queue * queue);
+  void doCommand();
 
 private:
   Compiler * compiler;
@@ -190,7 +190,7 @@ class SystemLibrary{
 
 public:
   bool existCommand(QString command);
-  void doCommand(QString command, Queue * queue);
+  void doCommand(QString command);
   void delay(Queue * queue);
   SystemLibrary(Controller * IC, Editor * w);
 
@@ -302,12 +302,16 @@ Q_OBJECT
 public:
   Queue();
   void appendCommand(Call * commandCall);
+  int getLength();
+  Call * getCommand(int position);
+  void call(int position);
+
 
 public slots:
   void callQueue();
 
 private:
-  QVector<Call*> queue;
+  QVector<Call*> queueVector;
   int position = 0;
 
 };
@@ -316,7 +320,7 @@ class ProcessLoop : public QObject{
 
 Q_OBJECT
 public:
-  ProcessLoop();
+  ProcessLoop(Queue * q);
 
 private slots:
   void cycle();
@@ -324,6 +328,7 @@ private slots:
 private:
   int tickDelay = 500;
   QTimer * timer;
+  Queue * queue;
 
 };
 

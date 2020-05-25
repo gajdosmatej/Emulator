@@ -43,13 +43,13 @@ bool SystemLibrary::existCommand(QString command){
   return false;
 }
 
-void SystemLibrary::doCommand(QString command, Queue * queue){
+void SystemLibrary::doCommand(QString command){
 
   QString winText = this->window->getText() + "DO SYSCALL " + command + ";\n";
   this->window->setText(winText);
 
-  if(command == "delay"){ this->delay(queue);  }
-  else{ queue->callQueue(); }
+  //if(command == "delay"){ this->delay(queue);  }
+  //else{ queue->callQueue(); }
 
 }
 

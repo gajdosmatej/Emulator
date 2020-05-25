@@ -18,18 +18,37 @@ Queue::Queue(){
 
 void Queue::appendCommand(Call * commandCall){
 
-  this->queue.append(commandCall);
+  this->queueVector.append(commandCall);
 
 }
 
 void Queue::callQueue(){
 
-  int len = this->queue.size();
+  int len = this->queueVector.size();
 
   if(this->position < len){
 
-    this->queue[this->position++]->doCommand(this);
+    this->queueVector[this->position++]->doCommand();
   }
+}
+
+
+Call * Queue::getCommand(int position){
+
+  return this->queueVector[position];
+
+}
+
+int Queue::getLength(){
+
+  return this->queueVector.size();
+
+}
+
+void Queue::call(int position){
+
+  this->queueVector[position]->doCommand();
+
 }
 
 Call::Call(){}
@@ -41,9 +60,9 @@ SystemCall::SystemCall(SystemLibrary * sysLib, QString com){
 
 }
 
-void SystemCall::doCommand(Queue * queue){
+void SystemCall::doCommand(){
 
-  this->systemLibrary->doCommand(this->command, queue);
+  this->systemLibrary->doCommand(this->command);
 
 }
 
@@ -55,11 +74,9 @@ DriverCall::DriverCall(DriverLibrary * driverLib, QString com, int portNum){
 
 }
 
-void DriverCall::doCommand(Queue * queue){
+void DriverCall::doCommand(){
 
   this->driverLibrary->doCommand(this->portNumber, this->command);
-
-  queue->callQueue();
 
 }
 
@@ -71,12 +88,11 @@ ErrorCall::ErrorCall(Compiler * comp, QString message, QString com){
 
 }
 
-void ErrorCall::doCommand(Queue * queue){
+void ErrorCall::doCommand(){
 
   QString err = this->errorMessage + " (in: \"" + this->command + "\")";
   this->compiler->print(err);
 
-  queue->callQueue();
 
 }
 
@@ -166,18 +182,29 @@ QString Parser::getCommand(QString rawCommand){
 
 }
 
-ProcessLoop::ProcessLoop()
+ProcessLoop::ProcessLoop(Queue * q)
 {
 
+  this->queue = q;
   this->timer = new QTimer(this);
   QObject::connect(this->timer, &QTimer::timeout, this, &ProcessLoop::cycle);
   timer->start(this->tickDelay);
 
 }
 
-void ProcessLoop::cycle(){
+void ProcessLoop::cycle()
+{
 
-  QTextStream out(stdout);
-  out<<"yee ";
+  int len = this->queue->getLength();
+
+  for(int i = 0; i < len; ++i){
+
+    this->queue->call(i);
+
+  }
+  /*QTextStream out(stdout);
+  out<<"yee ";*/
+
+
 
 }
