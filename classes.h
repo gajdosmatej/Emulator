@@ -17,6 +17,8 @@ class Controller;
 class SystemLibrary;
 class Compiler;
 class Queue;
+class ProcessLoop;
+
 
 class Error{
 
@@ -212,7 +214,7 @@ class CompilerErrorHandler{
 class Compiler{
 public:
     Compiler(Editor * editor);
-    void validate(Parser *parser);
+    void validate(Parser *parser, ProcessLoop * processLoop);
     Controller * controller;
     void print(QString message);
     Queue * createQueue(QVector<QString> commandList, Parser * parser);
@@ -237,7 +239,7 @@ public:
     Controller(Editor * editor, Compiler * comp, Editor * driverWindow);
 
 public slots:
-    void loadText();   //zapocni nacteni kodu, validaci etc.
+    void loadText(Compiler * compiler, ProcessLoop * processLoop);   //zapocni nacteni kodu, validaci etc.
     int getNumberOfPorts();
 
 private:
@@ -301,6 +303,7 @@ class Queue : public QObject{
 Q_OBJECT
 public:
   Queue();
+  ~Queue();
   void appendCommand(Call * commandCall);
   int getLength();
   Call * getCommand(int position);
@@ -320,7 +323,11 @@ class ProcessLoop : public QObject{
 
 Q_OBJECT
 public:
-  ProcessLoop(Queue * q);
+  ProcessLoop();
+  void start(Queue * q);
+
+public slots:
+  void stop();
 
 private slots:
   void cycle();

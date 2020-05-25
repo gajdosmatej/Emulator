@@ -22,6 +22,17 @@ void Queue::appendCommand(Call * commandCall){
 
 }
 
+Queue::~Queue(){
+
+  int len = this->getLength();
+  for(int i = 0; i < len; ++i){
+
+    delete this->queueVector[i];
+
+  }
+
+}
+
 void Queue::callQueue(){
 
   int len = this->queueVector.size();
@@ -182,13 +193,11 @@ QString Parser::getCommand(QString rawCommand){
 
 }
 
-ProcessLoop::ProcessLoop(Queue * q)
+ProcessLoop::ProcessLoop()
 {
 
-  this->queue = q;
   this->timer = new QTimer(this);
   QObject::connect(this->timer, &QTimer::timeout, this, &ProcessLoop::cycle);
-  timer->start(this->tickDelay);
 
 }
 
@@ -202,9 +211,18 @@ void ProcessLoop::cycle()
     this->queue->call(i);
 
   }
-  /*QTextStream out(stdout);
-  out<<"yee ";*/
+}
 
+void ProcessLoop::start(Queue * q){
 
+  this->queue = q;
+  timer->start(this->tickDelay);
+
+}
+
+void ProcessLoop::stop(){
+
+  delete this->queue;
+  timer->stop();
 
 }

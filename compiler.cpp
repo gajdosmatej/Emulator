@@ -75,7 +75,7 @@ Queue * Compiler::createQueue(QVector<QString> commandList, Parser * parser)
 
 }
 
-void Compiler::validate(Parser * parser)
+void Compiler::validate(Parser * parser, ProcessLoop * processLoop)
 {
 
   QVector<QString> commandList = parser->parse();
@@ -85,7 +85,7 @@ void Compiler::validate(Parser * parser)
 
   this->window->setText("");
 
-  ProcessLoop * loop = new ProcessLoop(queue);
+  processLoop->start(queue);
   //queue->callQueue();
 
 }

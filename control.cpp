@@ -11,10 +11,10 @@ Controller::Controller(Editor * editor, Compiler * comp, Editor * driverWindow){
     this->systemLibrary = new SystemLibrary(this, driverWindow);
 }
 
-void Controller::loadText(){
+void Controller::loadText(Compiler * compiler, ProcessLoop * processLoop){
 
     Parser * parser = new Parser(this->window->getText());
-    this->compiler->validate(parser);
+    compiler->validate(parser, processLoop);
 }
 
 int Controller::getNumberOfPorts(){ return this->portsNumber; }

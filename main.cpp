@@ -54,9 +54,13 @@ int main(int argc, char *argv[])
     Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), compiler, driverWindow);
 	   compiler->controller = controller;
 
+
+     ProcessLoop * processLoop = new ProcessLoop;
+
      QObject::connect(compileButton, &CompileButton::clicked, driverWindow, &Editor::clear);
+     //QObject::connect(compileButton, &CompileButton::clicked, processLoop, &ProcessLoop::stop);
     //propojeni tlacitka a radice
-    QObject::connect(compileButton, &CompileButton::clicked, controller, &Controller::loadText);
+    QObject::connect(compileButton, &CompileButton::clicked, controller, [compiler, processLoop, controller]{ controller->loadText(compiler, processLoop);  } );
 
     DeviceManager * deviceManager = new DeviceManager(new Editor(w, 300, 650, 400, 100), controller);
 
