@@ -165,3 +165,19 @@ QString Parser::getCommand(QString rawCommand){
   return rawCommand.mid(pos + 1, argPos - pos - 1);
 
 }
+
+ProcessLoop::ProcessLoop()
+{
+
+  this->timer = new QTimer(this);
+  QObject::connect(this->timer, &QTimer::timeout, this, &ProcessLoop::cycle);
+  timer->start(this->tickDelay);
+
+}
+
+void ProcessLoop::cycle(){
+
+  QTextStream out(stdout);
+  out<<"yee ";
+
+}

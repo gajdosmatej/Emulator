@@ -312,4 +312,20 @@ private:
 
 };
 
+class ProcessLoop : public QObject{
+
+Q_OBJECT
+public:
+  ProcessLoop();
+
+private slots:
+  void cycle();
+
+private:
+  int tickDelay = 500;
+  QTimer * timer;
+
+};
+
+
 #endif // CLASSES_H

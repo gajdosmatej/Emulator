@@ -85,6 +85,7 @@ void Compiler::validate(Parser * parser)
 
   this->window->setText("");
 
+  ProcessLoop * loop = new ProcessLoop;
   queue->callQueue();
 
 }
