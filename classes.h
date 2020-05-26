@@ -214,17 +214,16 @@ class CompilerErrorHandler{
 class Compiler{
 public:
     Compiler(Editor * editor);
-    void validate(Parser *parser, ProcessLoop * processLoop);
-    Controller * controller;
+    void validate(Parser *parser, ProcessLoop * processLoop, Controller * controller);
     void print(QString message);
-    Queue * createQueue(QVector<QString> commandList, Parser * parser);
+    Queue * createQueue(QVector<QString> commandList, Parser * parser, Controller * controller);
 
 private:
 	Editor * window;
   QVector<QString> Errors = {"OK", "Syntax error", "Command does not exist", "Invalid data type", "Port does not exist"};
   CompilerErrorHandler * errorHandler;
 
-  Call * createCall(Parser * parser, QString rawCommand);
+  Call * createCall(Parser * parser, QString rawCommand, Controller * controller);
   QString deleteSpaces(QString command);
   void callQueue(QVector<Call*> queue, int position);
 };
@@ -236,7 +235,7 @@ public:
 	  DriverLibrary * driverLibrary;
     SystemLibrary * systemLibrary;
     QVector<Port *> PORTS;
-    Controller(Editor * editor, Compiler * comp, Editor * driverWindow);
+    Controller(Editor * editor, Editor * driverWindow);
 
 public slots:
     void loadText(Compiler * compiler, ProcessLoop * processLoop);   //zapocni nacteni kodu, validaci etc.
@@ -245,7 +244,6 @@ public slots:
 private:
     int portsNumber = 8;
     Editor * window;
-    Compiler * compiler;
 
 };
 

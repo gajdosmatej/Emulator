@@ -1,12 +1,15 @@
 #include "classes.h"
 
 //iniciace portu
-Controller::Controller(Editor * editor, Compiler * comp, Editor * driverWindow){
+Controller::Controller(Editor * editor, Editor * driverWindow){
 
-    for(int i = 0; i < this->portsNumber; ++i){ this->PORTS.push_back(new Port);   }
+    for(int i = 0; i < this->portsNumber; ++i){ 
+        
+        this->PORTS.push_back(new Port);   
+        
+    }
 
     this->window = editor;
-    this->compiler = comp;
 	  this->driverLibrary = new DriverLibrary(this, driverWindow);
     this->systemLibrary = new SystemLibrary(this, driverWindow);
 }
@@ -14,7 +17,7 @@ Controller::Controller(Editor * editor, Compiler * comp, Editor * driverWindow){
 void Controller::loadText(Compiler * compiler, ProcessLoop * processLoop){
 
     Parser * parser = new Parser(this->window->getText());
-    compiler->validate(parser, processLoop);
+    compiler->validate(parser, processLoop, this);
 }
 
 int Controller::getNumberOfPorts(){ return this->portsNumber; }

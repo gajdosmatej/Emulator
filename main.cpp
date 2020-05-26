@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
 
 
     Compiler * compiler = new Compiler( new Editor(w, 300, 50, 200, 500) );
-    Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), compiler, driverWindow);
-	   compiler->controller = controller;
+    Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), driverWindow);
 
 
      ProcessLoop * processLoop = new ProcessLoop;
