@@ -230,12 +230,15 @@ void ProcessLoop::stop(){
 }
 
 
-int gcd(int a, int b){
+int ProcessLoop::gcd(int a, int b){
+    
+    int t;
+    
     while(b != 0){
      
-        int t = b;
-        int b = a % b;
-        int a = t;
+        t = b;
+        b = a % b;
+        a = t;
         
     }
     return a;
@@ -247,7 +250,7 @@ int ProcessLoop::calculateFrequency(QVector<int> frequencies)
     
     if(frequencies.size() == 2){
     
-        return gcd(frequencies[0], frequencies[1]);
+        return this->gcd(frequencies[0], frequencies[1]);
     
     }
     else if(frequencies.size() == 1){
@@ -258,7 +261,7 @@ int ProcessLoop::calculateFrequency(QVector<int> frequencies)
     else{
     
             frequencies.removeLast();
-            return gcd( frequencies[0], this->calculateFrequency( frequencies ) );
+            return this->gcd( frequencies[0], this->calculateFrequency( frequencies ) );
         
     }
 }

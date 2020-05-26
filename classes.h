@@ -338,6 +338,7 @@ private:
   QTimer * timer;
   Queue * queue;
   int calculateFrequency(QVector<int> frequencies);
+  int gcd(int a, int b);
 
 };
 

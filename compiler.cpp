@@ -87,6 +87,8 @@ void Compiler::validate(Parser * parser, ProcessLoop * processLoop, Controller *
 
   QVector<int> frequencies;
   frequencies.append(controller->getFrequency());
+  //frequencies.append(1);
+  //frequencies.append(2);
   
   processLoop->start(queue, frequencies);
   //queue->callQueue();
