@@ -163,6 +163,7 @@ public:
     int ID;
     int state = 0;
     Device(Editor * w);
+    int frequency;
 
 protected slots:
     virtual void readState() = 0;
@@ -236,12 +237,14 @@ public:
     SystemLibrary * systemLibrary;
     QVector<Port *> PORTS;
     Controller(Editor * editor, Editor * driverWindow);
+    int getFrequency();
 
 public slots:
     void loadText(Compiler * compiler, ProcessLoop * processLoop);   //zapocni nacteni kodu, validaci etc.
     int getNumberOfPorts();
 
 private:
+    int frequency = 2;
     int portsNumber = 8;
     Editor * window;
 
@@ -322,7 +325,7 @@ class ProcessLoop : public QObject{
 Q_OBJECT
 public:
   ProcessLoop();
-  void start(Queue * q);
+  void start(Queue * q, QVector<int> frequencies);
 
 public slots:
   void stop();
@@ -331,9 +334,10 @@ private slots:
   void cycle();
 
 private:
-  int tickDelay = 500;
+  int tickDelay;
   QTimer * timer;
   Queue * queue;
+  int calculateFrequency(QVector<int> frequencies);
 
 };
 

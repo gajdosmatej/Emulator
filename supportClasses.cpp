@@ -213,9 +213,11 @@ void ProcessLoop::cycle()
   }
 }
 
-void ProcessLoop::start(Queue * q){
+void ProcessLoop::start(Queue * q, QVector<int> frequencies){
 
   this->queue = q;
+  
+  this->tickDelay = 1000 / this->calculateFrequency(frequencies);
   timer->start(this->tickDelay);
 
 }
@@ -225,4 +227,38 @@ void ProcessLoop::stop(){
   delete this->queue;
   timer->stop();
 
+}
+
+
+int gcd(int a, int b){
+    while(b != 0){
+     
+        int t = b;
+        int b = a % b;
+        int a = t;
+        
+    }
+    return a;
+    
+}
+
+int ProcessLoop::calculateFrequency(QVector<int> frequencies)
+{
+    
+    if(frequencies.size() == 2){
+    
+        return gcd(frequencies[0], frequencies[1]);
+    
+    }
+    else if(frequencies.size() == 1){
+     
+        return frequencies[0];
+        
+    }
+    else{
+    
+            frequencies.removeLast();
+            return gcd( frequencies[0], this->calculateFrequency( frequencies ) );
+        
+    }
 }

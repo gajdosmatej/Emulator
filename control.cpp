@@ -27,6 +27,11 @@ Port::Port()
 
 }
 
+int Controller::getFrequency()
+{
+    return this->frequency;
+}
+
 SystemLibrary::SystemLibrary(Controller * IC, Editor * w){
 
   this->controller = IC;
