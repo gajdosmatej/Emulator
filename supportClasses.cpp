@@ -213,11 +213,11 @@ void ProcessLoop::cycle()
   }
 }
 
-void ProcessLoop::start(Queue * q, QVector<int> frequencies){
+void ProcessLoop::start(Queue * q, QVector<int> periods){
 
   this->queue = q;
-  
-  this->tickDelay = 1000 / this->calculateFrequency(frequencies);
+
+  this->tickDelay = this->calculateCommonPeriod(periods);
   timer->start(this->tickDelay);
 
 }
@@ -230,38 +230,38 @@ void ProcessLoop::stop(){
 }
 
 
-int ProcessLoop::gcd(int a, int b){
-    
+int ProcessLoop::greatestCommonDivisor(int a, int b){
+
     int t;
-    
+
     while(b != 0){
-     
+
         t = b;
         b = a % b;
         a = t;
-        
+
     }
     return a;
-    
+
 }
 
-int ProcessLoop::calculateFrequency(QVector<int> frequencies)
+int ProcessLoop::calculateCommonPeriod(QVector<int> periods)
 {
-    
-    if(frequencies.size() == 2){
-    
-        return this->gcd(frequencies[0], frequencies[1]);
-    
+
+    if(periods.size() == 2){
+
+        return this->greatestCommonDivisor(periods[0], periods[1]);
+
     }
-    else if(frequencies.size() == 1){
-     
-        return frequencies[0];
-        
+    else if(periods.size() == 1){
+
+        return periods[0];
+
     }
     else{
-    
-            frequencies.removeLast();
-            return this->gcd( frequencies[0], this->calculateFrequency( frequencies ) );
-        
+
+            periods.removeLast();
+            return this->greatestCommonDivisor( periods[0], this->calculateCommonPeriod( periods ) );
+
     }
 }

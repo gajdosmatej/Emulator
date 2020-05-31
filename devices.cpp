@@ -45,7 +45,7 @@ Head::Head(Editor * w) : Device(w)
 {
 
     this->ID = 10000;
-    this->frequency = 1;
+    this->period = 1000;
 
 }
 

@@ -3,10 +3,10 @@
 //iniciace portu
 Controller::Controller(Editor * editor, Editor * driverWindow){
 
-    for(int i = 0; i < this->portsNumber; ++i){ 
-        
-        this->PORTS.push_back(new Port);   
-        
+    for(int i = 0; i < this->portsNumber; ++i){
+
+        this->PORTS.push_back(new Port);
+
     }
 
     this->window = editor;
@@ -27,9 +27,28 @@ Port::Port()
 
 }
 
-int Controller::getFrequency()
+int Controller::getControlPeriod()
 {
-    return this->frequency;
+    return this->period;
+}
+
+
+QVector<int> Controller::getDevicePeriods()
+{
+
+  QVector<int> periods;
+
+  for(int i = 0; i < this->portsNumber; ++i){
+
+    if(this->PORTS[i]->device != nullptr){
+
+        periods.append(this->PORTS[i]->device->period);
+
+    }
+  }
+
+  return periods;
+
 }
 
 SystemLibrary::SystemLibrary(Controller * IC, Editor * w){
