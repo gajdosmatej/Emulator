@@ -190,11 +190,24 @@ protected slots:
   void readState();
 };
 
+
+class ErrorDevice : public Device{
+ Q_OBJECT
+public:
+    ErrorDevice(Editor * w);
+
+protected slots:
+    void readState();
+};
+
+
 class Port{
 public:
     Device * device = nullptr;
     Port();
 };
+
+
 
 class SystemLibrary{
 
@@ -252,7 +265,7 @@ public slots:
     int getNumberOfPorts();
 
 private:
-    int period = 500;
+    const int period = 500;
     int portsNumber = 8;
     Editor * window;
 
@@ -266,7 +279,8 @@ public:
     int numberOfDevices();
     void connectDevice(Device * device, int port);
     void disconnectDevice(int port);
-
+    Device * deviceFromName(QString name, Editor * w);
+    
 public slots:
   void proceed(Editor * deviceEditor);
 
