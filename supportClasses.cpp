@@ -265,3 +265,20 @@ int ProcessLoop::calculateCommonPeriod(QVector<int> periods)
 
     }
 }
+
+QVector<QString> DeviceParser::separateWords(QString sentence){
+
+  QString temp = sentence;
+  QVector<QString> output;
+  int i;
+
+  while((i = temp.indexOf(" ")) != -1){
+
+        output.append( temp.left(i) );
+        temp = temp.mid(i+1);
+
+  }
+
+  output.append(temp);  //posledni slovo
+  return output;
+}

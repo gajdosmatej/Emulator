@@ -96,7 +96,7 @@ private:
 class Parser{
 
 public:
-  Parser(QString parser);
+  Parser(QString parseText);
   QVector<QString> parse();
   QString getParser();
   int getPortNumber(QString rawCommand);
@@ -105,6 +105,13 @@ public:
 
 private:
   QString rawParser;
+
+};
+
+class DeviceParser{
+
+public:
+  QVector<QString> separateWords(QString sentence);
 
 };
 

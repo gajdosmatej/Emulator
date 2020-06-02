@@ -12,7 +12,16 @@ DeviceManager::DeviceManager(Editor * w, Controller * IO){
 
 void DeviceManager::proceed(Editor * deviceEditor){
 
-  this->connectDevice(new Head(deviceEditor), 0);
+  //this->connectDevice(new Head(deviceEditor), 0);
+  QString rawCode = this->window->getText();
+
+  QTextStream o(stdout);
+
+  DeviceParser * parser = new DeviceParser;
+  QVector<QString> words = parser->separateWords(rawCode);
+
+  //zkouska jestli parsovani funguje
+  for(int i = 0; i < words.length(); ++i){ o<<words[i];}
 
 }
 
