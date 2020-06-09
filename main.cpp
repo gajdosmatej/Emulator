@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     managerButton->setText("Spravovat zařízení");
     managerButton->show();
 
-    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow]{ deviceManager->proceed(deviceWindow); });
+    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow, processLoop]{ deviceManager->proceed(deviceWindow); processLoop->stop(); }  );
 
 
 

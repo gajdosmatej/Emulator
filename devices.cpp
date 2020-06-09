@@ -12,15 +12,15 @@ DeviceManager::DeviceManager(Editor * w, Controller * IO){
 
 
 Device * DeviceManager::deviceFromName(QString name, Editor * deviceEditor){
-    
+
     if(name == "Head"){
-     
+
         return new Head(deviceEditor);
-        
+
     }else{
-        
+
         return new ErrorDevice(deviceEditor);
-        
+
     }
 
 }
@@ -34,30 +34,40 @@ void DeviceManager::proceed(Editor * deviceEditor){
   QVector<QString> words = parser->separateWords(rawCode);
 
     if(words[0] == "new"){
-        
+
         bool ok;
         int port = words[1].toInt(&ok);
-        
+
         if(ok){
-         
+
             if(port < this->controller->getNumberOfPorts()){
-            
+
                 Device * device = this->deviceFromName( words[2], deviceEditor );
-                
+
                 if(device->ID != 0){
-                
+
                     this->connectDevice(device, port);
-                    
+
                 }
             }
         }
 
-        
+
     }else if(words[0] == "delete"){
-        
-        
+
+      bool ok;
+      int port = words[1].toInt(&ok);
+
+      if(ok){
+
+          if(port < this->controller->getNumberOfPorts()){
+
+              this->disconnectDevice(port);
+          }
+      }
+
     }
-  
+
   //zkouska jestli parsovani funguje
     //QTextStream o(stdout);
   //for(int i = 0; i < words.length(); ++i){ o<<words[i];}
@@ -90,9 +100,9 @@ Device::Device(Editor * w){
 }
 
 ErrorDevice::ErrorDevice(Editor * w) : Device(w){
-    
+
     this->ID = 0;
-    
+
 }
 
 void ErrorDevice::readState(){};

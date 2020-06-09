@@ -280,7 +280,7 @@ public:
     void connectDevice(Device * device, int port);
     void disconnectDevice(int port);
     Device * deviceFromName(QString name, Editor * w);
-    
+
 public slots:
   void proceed(Editor * deviceEditor);
 
