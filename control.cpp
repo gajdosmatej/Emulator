@@ -1,26 +1,53 @@
 #include "classes.h"
 
 //iniciace portu
-Controller::Controller(Editor * editor, Compiler * comp, Editor * driverWindow){
+Controller::Controller(Editor * editor, Editor * driverWindow){
 
-    for(int i = 0; i < this->portsNumber; ++i){ this->PORTS.push_back(new Port);   }
+    for(int i = 0; i < this->portsNumber; ++i){
+
+        this->PORTS.push_back(new Port);
+
+    }
 
     this->window = editor;
-    this->compiler = comp;
 	  this->driverLibrary = new DriverLibrary(this, driverWindow);
     this->systemLibrary = new SystemLibrary(this, driverWindow);
 }
 
-void Controller::loadText(){
+void Controller::loadText(Compiler * compiler, ProcessLoop * processLoop){
 
-    Code * code = new Code(this->window->getText());
-    this->compiler->validate(code);
+    Parser * parser = new Parser(this->window->getText());
+    compiler->validate(parser, processLoop, this);
 }
 
 int Controller::getNumberOfPorts(){ return this->portsNumber; }
 
 Port::Port()
 {
+
+}
+
+int Controller::getControlPeriod()
+{
+    return this->period;
+}
+
+
+QVector<int> Controller::getDevicePeriods()
+{
+
+  QVector<int> periods;
+
+  for(int i = 0; i < this->portsNumber; ++i){
+
+    if(this->PORTS[i]->device != nullptr){
+
+        periods.append(this->PORTS[i]->device->period);
+
+    }
+  }
+
+  return periods;
 
 }
 
@@ -43,13 +70,13 @@ bool SystemLibrary::existCommand(QString command){
   return false;
 }
 
-void SystemLibrary::doCommand(QString command, Queue * queue){
+void SystemLibrary::doCommand(QString command){
 
   QString winText = this->window->getText() + "DO SYSCALL " + command + ";\n";
   this->window->setText(winText);
 
-  if(command == "delay"){ this->delay(queue);  }
-  else{ queue->callQueue(); }
+  //if(command == "delay"){ this->delay(queue);  }
+  //else{ queue->callQueue(); }
 
 }
 

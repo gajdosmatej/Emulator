@@ -1,7 +1,6 @@
 #include "classes.h"
 
-MainWindow::MainWindow(int l, int t, int w, int h, QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(int l, int t, int w, int h, QWidget *parent) : QMainWindow(parent)
 {
 
     this->x = l;

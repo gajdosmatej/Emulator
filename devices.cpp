@@ -10,9 +10,67 @@ DeviceManager::DeviceManager(Editor * w, Controller * IO){
 
 }
 
-void DeviceManager::proceed(Editor * deviceEditor){
 
-  this->connectDevice(new Head(deviceEditor), 0);
+Device * DeviceManager::deviceFromName(QString name){
+
+    if(name == "Head"){
+
+        return new Head();
+
+    }else{
+
+        return new ErrorDevice();
+
+    }
+
+}
+
+void DeviceManager::proceed(){
+
+  //this->connectDevice(new Head(deviceEditor), 0);
+  QString rawCode = this->window->getText();
+
+  DeviceParser * parser = new DeviceParser;
+  QVector<QString> words = parser->separateWords(rawCode);
+
+    if(words[0] == "new"){
+
+        bool ok;
+        int port = words[1].toInt(&ok);
+
+        if(ok){
+
+            if(port < this->controller->getNumberOfPorts()){
+
+                Device * device = this->deviceFromName( words[2] );
+
+                if(device->ID != 0){
+
+                    this->connectDevice(device, port);
+
+                }
+            }
+        }
+
+
+    }else if(words[0] == "delete"){
+
+      bool ok;
+      int port = words[1].toInt(&ok);
+
+      if(ok){
+
+          if(port < this->controller->getNumberOfPorts()){
+
+              this->disconnectDevice(port);
+          }
+      }
+
+    }
+
+  //zkouska jestli parsovani funguje
+    //QTextStream o(stdout);
+  //for(int i = 0; i < words.length(); ++i){ o<<words[i];}
 
 }
 
@@ -31,39 +89,43 @@ void DeviceManager::disconnectDevice(int port){
 
 }
 
-Device::Device(Editor * w){
-
-  this->window = w;
+Device::Device(){
 
   this->timer = new QTimer(this);
-  connect(this->timer, SIGNAL(timeout()), this, SLOT(readState()));
-  timer->start(100);
+  connect(this->timer, SIGNAL(timeout()), this, SLOT(work()));
+  timer->start(this->period);
 
 }
 
-Head::Head(Editor * w) : Device(w)
+ErrorDevice::ErrorDevice() : Device()
+{
+
+    this->ID = 0;
+
+}
+
+void ErrorDevice::work()
+{};
+
+Head::Head() : Device()
 {
 
     this->ID = 10000;
+    this->period = 1000;
 
 }
 
-void Head::readState(){
+void Head::work(){
 
-  QString printedText;
-
-  switch(this->state){
+  switch(this->INPUT){
 
     case 0:
-      printedText = "*NOT LIGHTING*";
+      this->OUTPUT = 0;
       break;
 
     case 1:
-      printedText = "*LIGHTING*";
+      this->OUTPUT = 1;
       break;
 
   }
-  this->window->setText(printedText);
-
-
 }

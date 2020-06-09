@@ -5,27 +5,22 @@
 #include <QPushButton>
 #include <QVector>
 
+void createLabel(MainWindow * w, QString name, int x, int y, int width, int height){
+
+    QLabel * label = new QLabel(w);
+    label->setText(name);
+    label->setGeometry(x, y, width, height);
+    label->show();
+
+}
+
+
 void labels(MainWindow * w){
 
-    QLabel * controllerLabel = new QLabel(w);
-    controllerLabel->setText("Řadič");
-    controllerLabel->setGeometry(140, 20, 200, 20);
-    controllerLabel->show();
-
-    QLabel * compilerLabel = new QLabel(w);
-    compilerLabel->setText("Kompilátor");
-    compilerLabel->setGeometry(370, 20, 200, 20);
-    compilerLabel->show();
-
-    QLabel * driverLabel = new QLabel(w);
-    driverLabel->setText("Ovladač");
-    driverLabel->setGeometry(620, 20, 200, 20);
-    driverLabel->show();
-
-    QLabel * deviceLabel = new QLabel(w);
-    deviceLabel->setText("Zařízení");
-    deviceLabel->setGeometry(870, 20, 200, 20);
-    deviceLabel->show();
+  createLabel(w, "Řadič", 140, 20, 200, 20);
+  createLabel(w, "Kompilátor", 370, 20, 200, 20);
+  createLabel(w, "Ovladač", 620, 20, 200, 20);
+  createLabel(w, "Zařízení", 870, 20, 200, 20);
 
 }
 
@@ -49,19 +44,23 @@ int main(int argc, char *argv[])
     Editor * deviceWindow = new Editor(w, 800, 50, 200, 500);
     deviceWindow->readOnly();
 
-
     CompileButton * compileButton = new CompileButton(100, 570, 100, 30, w);
     compileButton->setText("Kompilovat");
     compileButton->show();
 
 
     Compiler * compiler = new Compiler( new Editor(w, 300, 50, 200, 500) );
-    Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), compiler, driverWindow);
-	   compiler->controller = controller;
+    Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), driverWindow);
+
+    DeviceWindowWrapper * deviceWindowWrapper = new DeviceWindowWrapper(deviceWindow);
+    deviceWindowWrapper->init(controller->getNumberOfPorts());
+
+     ProcessLoop * processLoop = new ProcessLoop(controller, deviceWindowWrapper);
 
      QObject::connect(compileButton, &CompileButton::clicked, driverWindow, &Editor::clear);
+     //QObject::connect(compileButton, &CompileButton::clicked, processLoop, &ProcessLoop::stop);
     //propojeni tlacitka a radice
-    QObject::connect(compileButton, &CompileButton::clicked, controller, &Controller::loadText);
+    QObject::connect(compileButton, &CompileButton::clicked, controller, [compiler, processLoop, controller]{ controller->loadText(compiler, processLoop);  } );
 
     DeviceManager * deviceManager = new DeviceManager(new Editor(w, 300, 650, 400, 100), controller);
 
@@ -69,10 +68,7 @@ int main(int argc, char *argv[])
     managerButton->setText("Spravovat zařízení");
     managerButton->show();
 
-    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow]{ deviceManager->proceed(deviceWindow); });
-
-    deviceManager->connectDevice(new Head(deviceWindow), 2);
-    //deviceManager->disconnectDevice(3);
+    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow, processLoop]{ deviceManager->proceed(); processLoop->stop(); }  );
 
 
     return a.exec();
