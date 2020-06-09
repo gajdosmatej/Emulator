@@ -18,6 +18,7 @@ class SystemLibrary;
 class Compiler;
 class Queue;
 class ProcessLoop;
+class DeviceWindowWrapper;
 
 
 class Error{
@@ -168,36 +169,36 @@ class Device : public QObject{
   Q_OBJECT
 public:
     int ID;
-    int state = 0;
-    Device(Editor * w);
+    int INPUT = 0;
     int period;
+    int OUTPUT = 0;
+    Device();
 
 protected slots:
-    virtual void readState() = 0;
+    virtual void work() = 0;
 
 protected:
     QTimer * timer;
-    Editor * window;
 
 };
 
 class Head : public Device{
   Q_OBJECT
 public:
-  Head(Editor * w);
+  Head();
 
 protected slots:
-  void readState();
+  void work();
 };
 
 
 class ErrorDevice : public Device{
  Q_OBJECT
 public:
-    ErrorDevice(Editor * w);
+    ErrorDevice();
 
 protected slots:
-    void readState();
+    void work();
 };
 
 
@@ -252,7 +253,6 @@ private:
 class Controller : public QObject{
 Q_OBJECT
 public:
-
 	  DriverLibrary * driverLibrary;
     SystemLibrary * systemLibrary;
     QVector<Port *> PORTS;
@@ -279,10 +279,10 @@ public:
     int numberOfDevices();
     void connectDevice(Device * device, int port);
     void disconnectDevice(int port);
-    Device * deviceFromName(QString name, Editor * w);
+    Device * deviceFromName(QString name);
 
 public slots:
-  void proceed(Editor * deviceEditor);
+  void proceed();
 
 private:
     Editor * window;
@@ -293,6 +293,7 @@ private:
 class Driver{
 public:
     virtual void execute(Device * device, QString command) = 0;
+    virtual void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper ) = 0;
     int ID;
     QVector<QString> functions;
     int portNumber;
@@ -307,6 +308,7 @@ public:
     void blink(Device * device);
     void light_on(Device * device);
     void light_off(Device * device);
+    void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper);
 };
 
 class DriverLibrary{
@@ -315,6 +317,7 @@ public:
 	bool existCommand(int pinNumber, QString command);
 	void doCommand(int pinNumber, QString command);
 	DriverLibrary(Controller* par, Editor * w);
+  void processOutput(DeviceWindowWrapper * deviceWindowWrapper);
 
 private:
 	QVector<Driver *> drivers = {new HeadDriver};
@@ -346,14 +349,15 @@ class ProcessLoop : public QObject{
 
 Q_OBJECT
 public:
-  ProcessLoop();
+  ProcessLoop(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper);
   void start(Queue * q, QVector<int> periods);
+  int getTickDelay();
 
 public slots:
   void stop();
 
 private slots:
-  void cycle();
+  void cycle(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper);
 
 private:
   int tickDelay;
@@ -364,5 +368,16 @@ private:
 
 };
 
+class DeviceWindowWrapper{
+
+public:
+  DeviceWindowWrapper(Editor * window);
+  void setTextOnPort(int port, QString text);
+  void init(int portNum);
+
+private:
+  Editor * window;
+
+};
 
 #endif // CLASSES_H

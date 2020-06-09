@@ -11,21 +11,21 @@ DeviceManager::DeviceManager(Editor * w, Controller * IO){
 }
 
 
-Device * DeviceManager::deviceFromName(QString name, Editor * deviceEditor){
+Device * DeviceManager::deviceFromName(QString name){
 
     if(name == "Head"){
 
-        return new Head(deviceEditor);
+        return new Head();
 
     }else{
 
-        return new ErrorDevice(deviceEditor);
+        return new ErrorDevice();
 
     }
 
 }
 
-void DeviceManager::proceed(Editor * deviceEditor){
+void DeviceManager::proceed(){
 
   //this->connectDevice(new Head(deviceEditor), 0);
   QString rawCode = this->window->getText();
@@ -42,7 +42,7 @@ void DeviceManager::proceed(Editor * deviceEditor){
 
             if(port < this->controller->getNumberOfPorts()){
 
-                Device * device = this->deviceFromName( words[2], deviceEditor );
+                Device * device = this->deviceFromName( words[2] );
 
                 if(device->ID != 0){
 
@@ -89,25 +89,25 @@ void DeviceManager::disconnectDevice(int port){
 
 }
 
-Device::Device(Editor * w){
-
-  this->window = w;
+Device::Device(){
 
   this->timer = new QTimer(this);
-  connect(this->timer, SIGNAL(timeout()), this, SLOT(readState()));
-  timer->start(100);
+  connect(this->timer, SIGNAL(timeout()), this, SLOT(work()));
+  timer->start(this->period);
 
 }
 
-ErrorDevice::ErrorDevice(Editor * w) : Device(w){
+ErrorDevice::ErrorDevice() : Device()
+{
 
     this->ID = 0;
 
 }
 
-void ErrorDevice::readState(){};
+void ErrorDevice::work()
+{};
 
-Head::Head(Editor * w) : Device(w)
+Head::Head() : Device()
 {
 
     this->ID = 10000;
@@ -115,22 +115,17 @@ Head::Head(Editor * w) : Device(w)
 
 }
 
-void Head::readState(){
+void Head::work(){
 
-  QString printedText;
-
-  switch(this->state){
+  switch(this->INPUT){
 
     case 0:
-      printedText = "*NOT LIGHTING*";
+      this->OUTPUT = 0;
       break;
 
     case 1:
-      printedText = "*LIGHTING*";
+      this->OUTPUT = 1;
       break;
 
   }
-  this->window->setText(printedText);
-
-
 }

@@ -19,13 +19,13 @@ void HeadDriver::execute(Device * device, QString command){
 
 void HeadDriver::light_on(Device * device){
 
-  device->state = 1;
+  device->INPUT = 1;
 
 }
 
 void HeadDriver::light_off(Device * device){
 
-  device->state = 0;
+  device->INPUT = 0;
 
 }
 
@@ -33,6 +33,20 @@ void HeadDriver::blink(Device * device){
 
 
 
+}
+
+void HeadDriver::processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper)
+{
+
+    if(deviceOutput == 0){
+
+      deviceWindowWrapper->setTextOnPort(port, "*LIGHT OFF*");
+
+    }else if(deviceOutput == 1){
+
+      deviceWindowWrapper->setTextOnPort(port, "*LIGHT ON*");
+
+    }
 }
 
 
@@ -61,6 +75,31 @@ bool DriverLibrary::existCommand(int pinNum, QString command){
 		return false;
 	}
 }
+
+void DriverLibrary::processOutput(DeviceWindowWrapper * deviceWindowWrapper)
+{
+
+  int portNum = this->controller->getNumberOfPorts();
+
+  for(int i = 0; i < portNum; ++i){
+
+    if(this->controller->PORTS[i]->device != nullptr){
+
+      int id = this->controller->PORTS[i]->device->ID;
+
+  		for(int j = 0; j < this->drivers.size(); ++j){
+
+  			//driver ma spravne id
+  			if(this->drivers[j]->ID == id){
+
+  				this->drivers[j]->processOutput(this->controller->PORTS[i]->device->OUTPUT, i, deviceWindowWrapper);
+
+  			}
+  		}
+    }
+  }
+}
+
 
 void DriverLibrary::doCommand(int pinNum, QString command){
 
