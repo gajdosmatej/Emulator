@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-/home/thrundus/Qt/5.14.1/gcc_64/bin/qmake Emulator.pro
-=======
 /home/HDD/Qt/5.14.2/gcc_64/bin/qmake -o Makefile Emulator.pro
->>>>>>> ce2976f04ef89fbb75184eb027642cac4ecce1e4
 make
 ./Emulator
