@@ -1,1 +1,19 @@
- 
+ID: 80;
+
+void light_on(Device * device): {
+
+  device->INPUT = 1;
+
+};
+
+void light_off(Device * device): {
+
+  device->INPUT = 0;
+
+};
+
+void blink(Device * device): {
+
+
+
+};
