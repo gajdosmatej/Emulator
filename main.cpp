@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
     Editor * deviceWindow = new Editor(w, 800, 50, 200, 500);
     deviceWindow->readOnly();
 
+
     CompileButton * compileButton = new CompileButton(100, 570, 100, 30, w);
     compileButton->setText("Kompilovat");
     compileButton->show();
@@ -52,10 +53,8 @@ int main(int argc, char *argv[])
     Compiler * compiler = new Compiler( new Editor(w, 300, 50, 200, 500) );
     Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), driverWindow);
 
-    DeviceWindowWrapper * deviceWindowWrapper = new DeviceWindowWrapper(deviceWindow);
-    deviceWindowWrapper->init(controller->getNumberOfPorts());
 
-     ProcessLoop * processLoop = new ProcessLoop(controller, deviceWindowWrapper);
+     ProcessLoop * processLoop = new ProcessLoop;
 
      QObject::connect(compileButton, &CompileButton::clicked, driverWindow, &Editor::clear);
      //QObject::connect(compileButton, &CompileButton::clicked, processLoop, &ProcessLoop::stop);
@@ -68,7 +67,12 @@ int main(int argc, char *argv[])
     managerButton->setText("Spravovat zařízení");
     managerButton->show();
 
-    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow, processLoop]{ deviceManager->proceed(); processLoop->stop(); }  );
+    QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow, processLoop]{ deviceManager->proceed(deviceWindow); processLoop->stop(); }  );
+
+
+
+    deviceManager->connectDevice(new Head(deviceWindow), 2);
+    //deviceManager->disconnectDevice(3);
 
 
     return a.exec();

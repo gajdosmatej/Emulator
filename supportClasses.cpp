@@ -193,31 +193,24 @@ QString Parser::getCommand(QString rawCommand){
 
 }
 
-ProcessLoop::ProcessLoop(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper)
+ProcessLoop::ProcessLoop()
 {
 
   this->timer = new QTimer(this);
-  QObject::connect(this->timer, &QTimer::timeout, this, [deviceWindowWrapper, controller, this](){ this->cycle(controller, deviceWindowWrapper);  } );
+  QObject::connect(this->timer, &QTimer::timeout, this, &ProcessLoop::cycle);
 
 }
 
-void ProcessLoop::cycle(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper)
+void ProcessLoop::cycle()
 {
-
-  deviceWindowWrapper->init(controller->getNumberOfPorts());
 
   int len = this->queue->getLength();
 
-  //volani prikazu
   for(int i = 0; i < len; ++i){
 
     this->queue->call(i);
 
   }
-
-  //cteni portu
-  controller->driverLibrary->processOutput(deviceWindowWrapper);
-
 }
 
 void ProcessLoop::start(Queue * q, QVector<int> periods){
@@ -236,12 +229,6 @@ void ProcessLoop::stop(){
 
 }
 
-int ProcessLoop::getTickDelay()
-{
-
-  return this->tickDelay;
-
-}
 
 int ProcessLoop::greatestCommonDivisor(int a, int b){
 
@@ -294,41 +281,4 @@ QVector<QString> DeviceParser::separateWords(QString sentence){
 
   output.append(temp);  //posledni slovo
   return output;
-}
-
-
-DeviceWindowWrapper::DeviceWindowWrapper(Editor * window)
-{
-
-  this->window = window;
-
-}
-
-void DeviceWindowWrapper::init(int portNum)
-{
-
-  this->window->setText("");
-
-  for(int i = 0; i < portNum; ++i){
-
-    this->window->setText(  this->window->getText() + "PORT " + QString::number(i) + ": ---\n");
-
-  }
-}
-
-
-void DeviceWindowWrapper::setTextOnPort(int port, QString text)
-{
-
-  QString allText = this->window->getText();
-  int index1 = allText.indexOf( "PORT " + QString::number(port) );
-  int index2 = allText.indexOf( "PORT " + QString::number(port+1) );
-
-  QString preceedingText = allText.left(index1);
-  QString middleText = "PORT " + QString::number(port) + ": " + text + "\n";
-  QString lastText = allText.mid(index2);
-
-  this->window->setText(preceedingText + middleText + lastText);
-
-
 }
