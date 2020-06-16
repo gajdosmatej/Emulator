@@ -172,6 +172,7 @@ public:
     int INPUT = 0;
     int period;
     int OUTPUT = 0;
+    QString name;
     Device();
 
 protected slots:
@@ -373,7 +374,7 @@ class DeviceWindowWrapper{
 public:
   DeviceWindowWrapper(Editor * window);
   void setTextOnPort(int port, QString text);
-  void init(int portNum);
+  void init(int portNum, Controller * controller);
 
 private:
   Editor * window;

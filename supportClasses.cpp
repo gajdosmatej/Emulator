@@ -204,7 +204,7 @@ ProcessLoop::ProcessLoop(Controller * controller, DeviceWindowWrapper * deviceWi
 void ProcessLoop::cycle(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper)
 {
 
-  deviceWindowWrapper->init(controller->getNumberOfPorts());
+  deviceWindowWrapper->init(controller->getNumberOfPorts(), controller);
 
   int len = this->queue->getLength();
 
@@ -304,14 +304,21 @@ DeviceWindowWrapper::DeviceWindowWrapper(Editor * window)
 
 }
 
-void DeviceWindowWrapper::init(int portNum)
+void DeviceWindowWrapper::init(int portNum, Controller * controller)
 {
 
   this->window->setText("");
 
   for(int i = 0; i < portNum; ++i){
 
-    this->window->setText(  this->window->getText() + "PORT " + QString::number(i) + ": ---\n");
+    QString name = "Grounded";
+    if(controller->PORTS[i]->device != nullptr){
+
+      name = controller->PORTS[i]->device->name;
+
+    }
+
+    this->window->setText(  this->window->getText() + "PORT " + QString::number(i) + " (" + name + "): ---\n");
 
   }
 }
@@ -321,11 +328,12 @@ void DeviceWindowWrapper::setTextOnPort(int port, QString text)
 {
 
   QString allText = this->window->getText();
-  int index1 = allText.indexOf( "PORT " + QString::number(port) );
+  int indexTemp = allText.indexOf( "PORT " + QString::number(port) );
+  int index1 = allText.indexOf(":", indexTemp + 1);
   int index2 = allText.indexOf( "PORT " + QString::number(port+1) );
 
   QString preceedingText = allText.left(index1);
-  QString middleText = "PORT " + QString::number(port) + ": " + text + "\n";
+  QString middleText = ": " + text + "\n";
   QString lastText = allText.mid(index2);
 
   this->window->setText(preceedingText + middleText + lastText);

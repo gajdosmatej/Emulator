@@ -76,7 +76,7 @@ void DeviceManager::proceed(){
 
 //dej portu v radici referenci na zarizeni
 void DeviceManager::connectDevice(Device * device, int port){
-
+QTextStream o(stdout);  o<<"yee";
     this->controller->PORTS[port]->device = device;
 
 }
@@ -101,6 +101,7 @@ ErrorDevice::ErrorDevice() : Device()
 {
 
     this->ID = 0;
+    this->name = "Grounded";
 
 }
 
@@ -112,6 +113,7 @@ Head::Head() : Device()
 
     this->ID = 10000;
     this->period = 1000;
+    this->name = "Head";
 
 }
 

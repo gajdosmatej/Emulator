@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     Controller * controller = new Controller(new Editor(w, 50, 50, 200, 500), driverWindow);
 
     DeviceWindowWrapper * deviceWindowWrapper = new DeviceWindowWrapper(deviceWindow);
-    deviceWindowWrapper->init(controller->getNumberOfPorts());
+    deviceWindowWrapper->init(controller->getNumberOfPorts(), controller);
 
      ProcessLoop * processLoop = new ProcessLoop(controller, deviceWindowWrapper);
 
