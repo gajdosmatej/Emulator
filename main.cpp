@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     managerButton->show();
 
     QObject::connect(managerButton, &CompileButton::clicked, deviceManager, [deviceManager, deviceWindow, processLoop]{ deviceManager->proceed(); processLoop->stop(); }  );
-
+    QObject::connect(managerButton, &CompileButton::clicked, deviceWindowWrapper, [controller, deviceWindowWrapper]{  deviceWindowWrapper->init(controller->getNumberOfPorts(), controller); } );
 
     return a.exec();
 }

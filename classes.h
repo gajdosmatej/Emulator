@@ -343,11 +343,14 @@ private:
 
 };
 
-class DeviceWindowWrapper{
+class DeviceWindowWrapper : public QObject{
+Q_OBJECT
 
 public:
   DeviceWindowWrapper(Editor * window);
   void setTextOnPort(int port, QString text);
+
+public slots:
   void init(int portNum, Controller * controller);
 
 private:
