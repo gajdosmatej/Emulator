@@ -2,14 +2,14 @@ from os import walk
 
 def init():
     header = open("./devicesDefinitions.h", "w")
-    header.write("//AUTOMATICKY VYGENEROVANE\n")
+    header.write("//AUTOMATICKY VYGENEROVANE\n#include \"abstractDeviceHeader.h\"\n")
     header.close()
 
     source = open("./devicesDefinitions.cpp", "w")
     source.write("//AUTOMATICKY VYGENEROVANE\n\n#include \"devicesDefinitions.h\"\n\n")
     source.close()
-    
-    
+
+
     headerDriver = open("./driversDefinitions.h", "w")
     headerDriver.write("//AUTOMATICKY VYGENEROVANE\n")
     headerDriver.close()
@@ -29,10 +29,10 @@ def getVariable(text, substr, ending):
 
 
 def getFunctionName(text):
-    
+
     i2 = text.index("):")
     i1 = text.rindex(";", 0, i2)
-    
+
     return text[i1+1:i2+1]
 
 
@@ -41,14 +41,14 @@ def makeDriverClassHeader(prototypeText, className):
     classHeader = "class " + className + " : public Driver{\n"
     classHeader += "public:\n"
     #classHeader += className + "();\n\n"
-    
+
     tempText = prototypeText
     while "):" in tempText:
-       
+
         classHeader += getFunctionName(tempText) + ";"
         tempText = tempText[tempText.index("};") +1 : ]
-    
-    
+
+
     classHeader += "};\n"
 
     header = open("./driversDefinitions.h", "a")
@@ -57,18 +57,18 @@ def makeDriverClassHeader(prototypeText, className):
 
 
 def makeDriverClassSource(prototypeText, className):
-    
+
     classSource = ""
     tempText = prototypeText
     while "):" in tempText:
-       
+
         wholeName = getFunctionName(tempText)
-        
+
         TYPE = wholeName[: wholeName.index(" ")+1]
         NAME = wholeName[wholeName.index(" ") + 1 :]
-        
+
         classSource += TYPE + className + "::" + NAME
-        
+
         classSource += getVariable(tempText, "):", "};") + "}\n\n"
         tempText = tempText[tempText.index("};") +1 : ]
 
@@ -96,7 +96,7 @@ def makeDeviceClassHeader(prototypeText, className):
 
 def makeDeviceClassSource(prototypeText, className):
 
-    classSource = className + "::" + className + "(){\n"
+    classSource = className + "::" + className + "() : Device(){\n"
 
     id = getVariable(prototypeText, "ID", ";")
     classSource += "this->ID = " + id + ";\n"

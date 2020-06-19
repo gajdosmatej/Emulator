@@ -1,13 +1,4 @@
-#include <QObject>
-#include <QPushButton>
-#include <QMainWindow>
-#include <QString>
-#include <QVector>
-#include <QList>
-#include <QWidget>
-#include <QTextEdit>
-#include <QTextStream>
-#include <QTimer>
+#include "devicesDefinitions.h"
 
 #ifndef CLASSES_H
 #define CLASSES_H
@@ -165,24 +156,7 @@ private:
     QWidget * parent;
 };
 
-class Device : public QObject{
-  Q_OBJECT
-public:
-    int ID;
-    int INPUT = 0;
-    int period;
-    int OUTPUT = 0;
-    QString name;
-    Device();
-
-protected slots:
-    virtual void work() = 0;
-
-protected:
-    QTimer * timer;
-
-};
-
+/*
 class Head : public Device{
   Q_OBJECT
 public:
@@ -190,7 +164,7 @@ public:
 
 protected slots:
   void work();
-};
+};*/
 
 
 class ErrorDevice : public Device{

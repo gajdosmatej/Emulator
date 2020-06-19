@@ -15,13 +15,15 @@ QT += widgets
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += classes.h \
-            tests.h
+HEADERS +=  qt.h \
+            abstractDeviceHeader.h \
+            devicesDefinitions.h \
+            classes.h 
+            
 SOURCES += compiler.cpp \
            control.cpp \
            devices.cpp \
            drivers.cpp \
            graphics.cpp \
            main.cpp \
-           supportClasses.cpp \
-           tests.cpp
+           supportClasses.cpp

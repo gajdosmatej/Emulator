@@ -1,7 +1,7 @@
 ID: 80;
 period: 500;
 
-void work(): { 
+void work(): {
 
   switch(this->INPUT){
 

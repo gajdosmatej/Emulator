@@ -1,0 +1,10 @@
+#include <QObject>
+#include <QPushButton>
+#include <QMainWindow>
+#include <QString>
+#include <QVector>
+#include <QList>
+#include <QWidget>
+#include <QTextEdit>
+#include <QTextStream>
+#include <QTimer> 

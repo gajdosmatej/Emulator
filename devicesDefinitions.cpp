@@ -2,13 +2,13 @@
 
 #include "devicesDefinitions.h"
 
-Head::Head(){
+Head::Head() : Device(){
 this->ID = 80;
 this->period = 500;
 };
 
 void Head::work()
-{ 
+{
 
   switch(this->INPUT){
 

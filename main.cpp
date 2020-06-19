@@ -1,5 +1,4 @@
 #include "classes.h"
-#include "tests.h"
 #include <QApplication>
 #include <QLabel>
 #include <QPushButton>
@@ -27,8 +26,6 @@ void labels(MainWindow * w){
 
 int main(int argc, char *argv[])
 {
-    Test * test = new Test;
-    test->runTests();
 
     QApplication a(argc, argv);
     MainWindow * w = new MainWindow(100, 100, 1050, 800);
