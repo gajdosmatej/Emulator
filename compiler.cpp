@@ -78,20 +78,20 @@ Queue * Compiler::createQueue(QVector<QString> commandList, Parser * parser, Con
 void Compiler::validate(Parser * parser, ProcessLoop * processLoop, Controller * controller)
 {
 
-  QVector<QString> commandList = parser->parse();
+    QVector<QString> commandList = parser->parse();
 
-  Queue * queue = this->createQueue(commandList, parser, controller);
+    Queue * queue = this->createQueue(commandList, parser, controller);
 
 
-  this->window->setText("");
+     this->window->setText("");
 
-  QVector<int> periods = controller->getDevicePeriods();
-  periods.append(controller->getControlPeriod());
-  //frequencies.append(1);
-  //frequencies.append(2);
+     QVector<int> periods = controller->getDevicePeriods();
+     periods.append(controller->getControlPeriod());
+     //frequencies.append(1);
+     //frequencies.append(2);
 
-  processLoop->start(queue, periods);
-  //queue->callQueue();
+     processLoop->start(queue, periods);
+     //queue->callQueue();
 
 }
 

@@ -5,12 +5,14 @@
 ErrorDevice::ErrorDevice() : Device(){
 this->ID = 0;
 this->period = 1000;
+this->name = "ErrorDevice";
 };
 
 void ErrorDevice::work()
 {};Head::Head() : Device(){
 this->ID = 10000;
 this->period = 1000;
+this->name = "Head";
 };
 
 void Head::work()

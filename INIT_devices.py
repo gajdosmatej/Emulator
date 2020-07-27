@@ -104,6 +104,8 @@ def makeDeviceClassSource(prototypeText, className):
     period = getVariable(prototypeText, "period", ";")
     classSource += "this->period = " + period + ";\n"
 
+    classSource += "this->name = \"" + className + "\";\n"
+
     classSource += "};\n\n"
 
     classSource += "void " + className + "::work()\n"
