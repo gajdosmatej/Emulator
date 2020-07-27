@@ -64,12 +64,16 @@ void Queue::call(int position){
 
 Call::Call(){}
 
+Call::~Call(){}
+
 SystemCall::SystemCall(SystemLibrary * sysLib, QString com){
 
   this->systemLibrary = sysLib;
   this->command = com;
 
 }
+
+SystemCall::~SystemCall(){}
 
 void SystemCall::doCommand(){
 
@@ -91,6 +95,8 @@ void DriverCall::doCommand(){
 
 }
 
+DriverCall::~DriverCall(){}
+
 ErrorCall::ErrorCall(Compiler * comp, QString message, QString com){
 
   this->errorMessage = message;
@@ -98,6 +104,8 @@ ErrorCall::ErrorCall(Compiler * comp, QString message, QString com){
   this->command = com;
 
 }
+
+ErrorCall::~ErrorCall(){}
 
 void ErrorCall::doCommand(){
 
@@ -198,7 +206,8 @@ ProcessLoop::ProcessLoop(Controller * controller, DeviceWindowWrapper * deviceWi
 
   this->timer = new QTimer(this);
   QObject::connect(this->timer, &QTimer::timeout, this, [deviceWindowWrapper, controller, this](){ this->cycle(controller, deviceWindowWrapper);  } );
-
+  this->queue = nullptr;
+  
 }
 
 void ProcessLoop::cycle(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper)
@@ -231,8 +240,12 @@ void ProcessLoop::start(Queue * q, QVector<int> periods){
 
 void ProcessLoop::stop(){
 
-  delete this->queue;
-  timer->stop();
+    if(this->queue != nullptr){
+
+        delete this->queue;
+        this->queue = nullptr;
+        timer->stop();
+    }
 
 }
 

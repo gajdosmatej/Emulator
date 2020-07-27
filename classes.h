@@ -33,6 +33,7 @@ class Call{
 
 public:
   Call();
+  ~Call();
   virtual void doCommand() = 0;
 
 protected:
@@ -43,6 +44,7 @@ class DriverCall : public Call{
 
 public:
   DriverCall(DriverLibrary * driverLib, QString com, int portNum);
+  ~DriverCall();
   void doCommand();
 
 private:
@@ -55,6 +57,7 @@ class SystemCall : public Call{
 
 public:
   SystemCall(SystemLibrary * sysLib, QString com);
+  ~SystemCall();
   void doCommand();
 
 private:
@@ -66,6 +69,7 @@ class ErrorCall : public Call{
 
 public:
   ErrorCall(Compiler * comp, QString message, QString com);
+  ~ErrorCall();
   void doCommand();
 
 private:
