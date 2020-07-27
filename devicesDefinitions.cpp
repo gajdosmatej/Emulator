@@ -2,9 +2,15 @@
 
 #include "devicesDefinitions.h"
 
-Head::Head() : Device(){
-this->ID = 80;
-this->period = 500;
+ErrorDevice::ErrorDevice() : Device(){
+this->ID = 0;
+this->period = 1000;
+};
+
+void ErrorDevice::work()
+{};Head::Head() : Device(){
+this->ID = 10000;
+this->period = 1000;
 };
 
 void Head::work()
@@ -22,3 +28,4 @@ void Head::work()
 
   }
 
+};

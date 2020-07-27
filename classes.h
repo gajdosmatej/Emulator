@@ -167,14 +167,14 @@ protected slots:
 };*/
 
 
-class ErrorDevice : public Device{
+/*class ErrorDevice : public Device{
  Q_OBJECT
 public:
     ErrorDevice();
 
 protected slots:
     void work();
-};
+};*/
 
 
 class Port{

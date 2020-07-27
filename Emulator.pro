@@ -18,12 +18,13 @@ QT += widgets
 HEADERS +=  qt.h \
             abstractDeviceHeader.h \
             devicesDefinitions.h \
-            classes.h 
-            
+            classes.h
+
 SOURCES += compiler.cpp \
            control.cpp \
            devices.cpp \
            drivers.cpp \
            graphics.cpp \
            main.cpp \
-           supportClasses.cpp
+           supportClasses.cpp \
+           devicesDefinitions.cpp

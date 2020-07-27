@@ -96,7 +96,7 @@ Device::Device(){
   timer->start(this->period);
 
 }
-
+/*
 ErrorDevice::ErrorDevice() : Device()
 {
 
@@ -130,4 +130,4 @@ void Head::work(){
       break;
 
   }
-}
+}*/

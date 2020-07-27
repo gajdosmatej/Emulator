@@ -1,4 +1,4 @@
-ID: 80;
+ID: 10000;
 
 void light_on(Device * device): {
 

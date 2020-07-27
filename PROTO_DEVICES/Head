@@ -1,5 +1,5 @@
-ID: 80;
-period: 500;
+ID: 10000;
+period: 1000;
 
 void work(): {
 

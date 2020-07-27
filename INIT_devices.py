@@ -108,6 +108,7 @@ def makeDeviceClassSource(prototypeText, className):
 
     classSource += "void " + className + "::work()\n"
     classSource += getVariable(prototypeText, "work()", "};")
+    classSource += "};"
 
     header = open("./devicesDefinitions.cpp", "a")
     header.write(classSource)
