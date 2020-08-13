@@ -1,6 +1,6 @@
 #include "classes.h"
 
-
+/*
 HeadDriver::HeadDriver()
 {
 
@@ -48,7 +48,7 @@ void HeadDriver::processOutput(int deviceOutput, int port, DeviceWindowWrapper *
 
     }
 }
-
+*/
 
 bool DriverLibrary::existCommand(int pinNum, QString command){
 

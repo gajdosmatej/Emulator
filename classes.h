@@ -1,4 +1,5 @@
 #include "devicesDefinitions.h"
+#include "driversDefinitions.h"
 
 #ifndef CLASSES_H
 #define CLASSES_H
@@ -268,7 +269,7 @@ private:
     Controller * controller;
     QVector<int> ports = {0, 0, 0, 0, 0, 0, 0, 0};
 };
-
+/*
 class Driver{
 public:
     virtual void execute(Device * device, QString command) = 0;
@@ -289,7 +290,7 @@ public:
     void light_off(Device * device);
     void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper);
 };
-
+*/
 class DriverLibrary{
 
 public:

@@ -17,7 +17,9 @@ QT += widgets
 # Input
 HEADERS +=  qt.h \
             abstractDeviceHeader.h \
+            abstractDriverHeader.h \
             devicesDefinitions.h \
+            driversDefinitions.h \
             classes.h
 
 SOURCES += compiler.cpp \
@@ -27,4 +29,5 @@ SOURCES += compiler.cpp \
            graphics.cpp \
            main.cpp \
            supportClasses.cpp \
-           devicesDefinitions.cpp
+           devicesDefinitions.cpp \
+           driversDefinitions.cpp
