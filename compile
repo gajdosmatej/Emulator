@@ -1,3 +1,4 @@
 /home/HDD/Qt/5.14.2/gcc_64/bin/qmake -o Makefile Emulator.pro
 make
 ./Emulator
+

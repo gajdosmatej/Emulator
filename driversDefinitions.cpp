@@ -26,3 +26,7 @@ void HeadDriver::blink(Device * device){
 
 }
 
+HeadDriver::HeadDriver(){
+this->ID = 10000
+this->functions = {"light_on","light_off","blink"}
+}

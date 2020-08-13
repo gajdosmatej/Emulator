@@ -11,7 +11,7 @@ def init():
 
 
     headerDriver = open("./driversDefinitions.h", "w")
-    headerDriver.write("//AUTOMATICKY VYGENEROVANE\n")
+    headerDriver.write("//AUTOMATICKY VYGENEROVANE\n#include \"abstractDriverHeader.h\"\n")
     headerDriver.close()
 
     sourceDriver = open("./driversDefinitions.cpp", "w")
@@ -49,6 +49,8 @@ def makeDriverClassHeader(prototypeText, className):
         tempText = tempText[tempText.index("};") +1 : ]
 
 
+    classHeader += "\nvoid execute(Device * device, QString command);\n"
+    classHeader += "void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper);\n"
     classHeader += "};\n"
 
     header = open("./driversDefinitions.h", "a")
@@ -72,7 +74,22 @@ def makeDriverClassSource(prototypeText, className):
         classSource += getVariable(tempText, "):", "};") + "}\n\n"
         tempText = tempText[tempText.index("};") +1 : ]
 
+    classSource += className + "::" + className + "(){\n"
+    classSource += "this->ID = " + getVariable(prototypeText, "ID", ";")
+    classSource += "\nthis->functions = {"
 
+    tempText = prototypeText
+    while "):" in tempText:
+
+        wholeName = getFunctionName(tempText)
+        NAME = wholeName[wholeName.index(" ") + 1 : wholeName.index("(")]
+        classSource += "\"" + NAME + "\","
+        tempText = tempText[tempText.index("};") +1 : ]
+
+    classSource = classSource[:-1]
+    classSource += "}"
+
+    classSource += "\n}"
     source = open("./driversDefinitions.cpp", "a")
     source.write(classSource)
     source.close()
