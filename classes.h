@@ -4,6 +4,7 @@
 #ifndef CLASSES_H
 #define CLASSES_H
 
+class Driver;
 class DriverLibrary;
 class Controller;
 class SystemLibrary;
@@ -300,7 +301,7 @@ public:
   void processOutput(DeviceWindowWrapper * deviceWindowWrapper);
 
 private:
-	QVector<Driver *> drivers = {new HeadDriver};
+	QVector<Driver *> drivers = {};
 	Controller * controller;
   Editor * window;
 };

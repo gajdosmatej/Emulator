@@ -30,4 +30,5 @@ SOURCES += compiler.cpp \
            main.cpp \
            supportClasses.cpp \
            devicesDefinitions.cpp \
-           driversDefinitions.cpp
+           driversDefinitions.cpp \
+           driverLibraryConstruct.cpp

@@ -7,4 +7,4 @@
 #include <QWidget>
 #include <QTextEdit>
 #include <QTextStream>
-#include <QTimer> 
+#include <QTimer>

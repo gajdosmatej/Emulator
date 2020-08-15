@@ -17,3 +17,16 @@ void blink(Device * device): {
 
 
 };
+
+void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper): {
+
+    if(deviceOutput == 0){
+
+      deviceWindowWrapper->setTextOnPort(port, "*LIGHT OFF*");
+
+    }else if(deviceOutput == 1){
+
+      deviceWindowWrapper->setTextOnPort(port, "*LIGHT ON*");
+
+    }
+};

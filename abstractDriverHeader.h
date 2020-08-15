@@ -1,4 +1,5 @@
 #include "qt.h"
+class Device;
 class DeviceWindowWrapper;
 
 class Driver{

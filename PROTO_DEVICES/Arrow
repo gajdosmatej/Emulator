@@ -1,0 +1,27 @@
+ID: 10011;
+period: 2000;
+
+void work(): {
+
+  switch(this->INPUT){
+
+    case 0:
+      this->OUTPUT = 0;
+      break;
+
+    case 1:
+      this->OUTPUT = 1;
+      break;
+      
+    case 2:
+      this->OUTPUT = 2;
+      break;
+      
+    case 3:
+      this->OUTPUT = 3;
+      break;
+
+  }
+
+};
+ 

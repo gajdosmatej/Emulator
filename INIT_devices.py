@@ -6,7 +6,7 @@ def init():
     header.close()
 
     source = open("./devicesDefinitions.cpp", "w")
-    source.write("//AUTOMATICKY VYGENEROVANE\n\n#include \"devicesDefinitions.h\"\n\n")
+    source.write("//AUTOMATICKY VYGENEROVANE\n\n#include \"classes.h\"\n\n")
     source.close()
 
 
@@ -15,7 +15,7 @@ def init():
     headerDriver.close()
 
     sourceDriver = open("./driversDefinitions.cpp", "w")
-    sourceDriver.write("//AUTOMATICKY VYGENEROVANE\n\n#include \"driversDefinitions.h\"\n\n")
+    sourceDriver.write("//AUTOMATICKY VYGENEROVANE\n\n#include \"classes.h\"\n\n")
     sourceDriver.close()
 
 
@@ -36,6 +36,23 @@ def getFunctionName(text):
     return text[i1+1:i2+1]
 
 
+def makeDriverLibraryConstructor(driverNames):
+
+    text = "#include \"classes.h\"\n"
+    text += "//AUTOMATICKY GENEROVANE\n"
+    text += "DriverLibrary::DriverLibrary(Controller * par, Editor * w){\n"
+    text += "this->controller = par;\n"
+    text += "this->window = w;\n"
+
+    for driver in driverNames:
+        text += "this->drivers.append(new " + driver + ");\n"
+
+    text += "}"
+
+    file = open("./driverLibraryConstruct.cpp", "w")
+    file.write(text)
+    file.close()
+
 def makeDriverClassHeader(prototypeText, className):
 
     classHeader = "class " + className + " : public Driver{\n"
@@ -50,7 +67,6 @@ def makeDriverClassHeader(prototypeText, className):
 
 
     classHeader += "\nvoid execute(Device * device, QString command);\n"
-    classHeader += "void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper);\n"
     classHeader += "};\n"
 
     header = open("./driversDefinitions.h", "a")
@@ -77,8 +93,8 @@ def makeDriverClassSource(prototypeText, className):
 
     #konstruktor
     classSource += className + "::" + className + "(){\n"
-    classSource += "this->ID = " + getVariable(prototypeText, "ID", ";")
-    classSource += "\nthis->functions = {"
+    classSource += "this->ID = " + getVariable(prototypeText, "ID", ";") + ";\n"
+    classSource += "this->functions = {"
 
     #pole existujicich funkci
     tempText = prototypeText
@@ -86,11 +102,16 @@ def makeDriverClassSource(prototypeText, className):
 
         wholeName = getFunctionName(tempText)
         NAME = wholeName[wholeName.index(" ") + 1 : wholeName.index("(")]
+
+        if NAME == "processOutput":
+            tempText = tempText[tempText.index("};") +1 : ]
+            continue
+
         classSource += "\"" + NAME + "\","
         tempText = tempText[tempText.index("};") +1 : ]
 
     classSource = classSource[:-1]
-    classSource += "}"
+    classSource += "};"
 
     classSource += "\n}\n\n"
 
@@ -101,11 +122,16 @@ def makeDriverClassSource(prototypeText, className):
 
         wholeName = getFunctionName(tempText)
         NAME = wholeName[wholeName.index(" ") + 1 : wholeName.index("(")]
-        classSource += "if(command == \"" + NAME + "\"){    this->" + NAME + "();  }\n"
+
+        if NAME == "processOutput":
+            tempText = tempText[tempText.index("};") +1 : ]
+            continue
+
+        classSource += "if(command == \"" + NAME + "\"){    this->" + NAME + "(device);  }\n"
         tempText = tempText[tempText.index("};") +1 : ]
 
     classSource += "}\n\n"
-    
+
     source = open("./driversDefinitions.cpp", "a")
     source.write(classSource)
     source.close()
@@ -165,10 +191,10 @@ def devices():
         break
 
 
-
 def drivers():
     pathDrivers = "./PROTO_DRIVERS"
     driverPrototypes = []
+    driverNames = []
 
     for (dirpath, dirnames, filenames) in walk(pathDrivers):
 
@@ -177,9 +203,11 @@ def drivers():
             driverText = driverProto.read()
             makeDriverClassHeader(driverText, f)
             makeDriverClassSource(driverText, f)
+            driverNames.append(f)
 
         break
 
+    makeDriverLibraryConstructor(driverNames)
 
 init()
 devices()

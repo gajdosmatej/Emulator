@@ -119,10 +119,3 @@ void DriverLibrary::doCommand(int pinNum, QString command){
 			}
 		}
 }
-
-DriverLibrary::DriverLibrary(Controller * par, Editor * w){
-
-	this->controller = par;
-  this->window = w;
-
-}

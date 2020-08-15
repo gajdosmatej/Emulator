@@ -1,8 +1,37 @@
 //AUTOMATICKY VYGENEROVANE
 
-#include "devicesDefinitions.h"
+#include "classes.h"
 
-ErrorDevice::ErrorDevice() : Device(){
+Arrow::Arrow() : Device(){
+this->ID = 10011;
+this->period = 2000;
+this->name = "Arrow";
+};
+
+void Arrow::work()
+{
+
+  switch(this->INPUT){
+
+    case 0:
+      this->OUTPUT = 0;
+      break;
+
+    case 1:
+      this->OUTPUT = 1;
+      break;
+      
+    case 2:
+      this->OUTPUT = 2;
+      break;
+      
+    case 3:
+      this->OUTPUT = 3;
+      break;
+
+  }
+
+};ErrorDevice::ErrorDevice() : Device(){
 this->ID = 0;
 this->period = 1000;
 this->name = "ErrorDevice";

@@ -1,0 +1,47 @@
+ID: 10011;
+
+void move_left(Device * device): {
+
+  device->INPUT = 0;
+
+};
+
+void move_up(Device * device): {
+
+  device->INPUT = 1;
+
+};
+
+void move_right(Device * device): {
+
+  device->INPUT = 2;
+
+};
+
+void move_down(Device * device): {
+
+  device->INPUT = 3;
+
+};
+
+
+void processOutput(int deviceOutput, int port, DeviceWindowWrapper * deviceWindowWrapper): {
+
+    if(deviceOutput == 0){
+
+      deviceWindowWrapper->setTextOnPort(port, "*MOVED LEFT*");
+
+    }else if(deviceOutput == 1){
+
+      deviceWindowWrapper->setTextOnPort(port, "*MOVED UP*");
+
+    }else if(deviceOutput == 2){
+
+      deviceWindowWrapper->setTextOnPort(port, "*MOVED RIGHT*");
+
+    }else if(deviceOutput == 3){
+
+      deviceWindowWrapper->setTextOnPort(port, "*MOVED DOWN*");
+
+    }
+};
