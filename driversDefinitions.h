@@ -2,7 +2,7 @@
 #include "abstractDriverHeader.h"
 class HeadDriver : public Driver{
 public:
-
+HeadDriver();
 
 void light_on(Device * device);
 

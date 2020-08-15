@@ -40,7 +40,7 @@ def makeDriverClassHeader(prototypeText, className):
 
     classHeader = "class " + className + " : public Driver{\n"
     classHeader += "public:\n"
-    #classHeader += className + "();\n\n"
+    classHeader += className + "();"
 
     tempText = prototypeText
     while "):" in tempText:
@@ -60,6 +60,7 @@ def makeDriverClassHeader(prototypeText, className):
 
 def makeDriverClassSource(prototypeText, className):
 
+    #funkce
     classSource = ""
     tempText = prototypeText
     while "):" in tempText:
@@ -74,10 +75,12 @@ def makeDriverClassSource(prototypeText, className):
         classSource += getVariable(tempText, "):", "};") + "}\n\n"
         tempText = tempText[tempText.index("};") +1 : ]
 
+    #konstruktor
     classSource += className + "::" + className + "(){\n"
     classSource += "this->ID = " + getVariable(prototypeText, "ID", ";")
     classSource += "\nthis->functions = {"
 
+    #pole existujicich funkci
     tempText = prototypeText
     while "):" in tempText:
 
@@ -89,7 +92,20 @@ def makeDriverClassSource(prototypeText, className):
     classSource = classSource[:-1]
     classSource += "}"
 
-    classSource += "\n}"
+    classSource += "\n}\n\n"
+
+    #execute
+    classSource += "void " + className + "::execute(Device * device, QString command){\n"
+    tempText = prototypeText
+    while "):" in tempText:
+
+        wholeName = getFunctionName(tempText)
+        NAME = wholeName[wholeName.index(" ") + 1 : wholeName.index("(")]
+        classSource += "if(command == \"" + NAME + "\"){    this->" + NAME + "();  }\n"
+        tempText = tempText[tempText.index("};") +1 : ]
+
+    classSource += "}\n\n"
+    
     source = open("./driversDefinitions.cpp", "a")
     source.write(classSource)
     source.close()

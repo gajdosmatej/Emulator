@@ -30,3 +30,10 @@ HeadDriver::HeadDriver(){
 this->ID = 10000
 this->functions = {"light_on","light_off","blink"}
 }
+
+void HeadDriver::execute(Device * device, QString command){
+if(command == "light_on"){    this->light_on();  }
+if(command == "light_off"){    this->light_off();  }
+if(command == "blink"){    this->blink();  }
+}
+
