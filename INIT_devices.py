@@ -35,6 +35,26 @@ def getFunctionName(text):
 
     return text[i1+1:i2+1]
 
+def deviceManagerDeviceFromName(deviceNames):
+    text = "#include \"classes.h\""
+    text += "\n//AUTOMATICKY GENEROVANE\n"
+
+    text += "Device * DeviceManager::deviceFromName(QString name){\n\n"
+
+    text += "if(name == \"" + deviceNames[0] + "\"){    return new " + deviceNames[0] + "();    }\n"
+    deviceNames = deviceNames[1:]
+
+    for device in deviceNames:
+
+        text += "if(name == \"" + device + "\"){    return new " + device + "();    }\n"
+
+    text += "else{  return new ErrorDevice; }"
+    text += "}"
+
+    file = open("./deviceManagerDeviceFromName.cpp", "w")
+    file.write(text)
+    file.close()
+
 
 def makeDriverLibraryConstructor(driverNames):
 
@@ -179,6 +199,7 @@ def makeDeviceClassSource(prototypeText, className):
 def devices():
     pathDevices = "./PROTO_DEVICES"
     devicePrototypes = []
+    deviceNames = []
 
     for (dirpath, dirnames, filenames) in walk(pathDevices):
 
@@ -187,9 +208,11 @@ def devices():
             deviceText = deviceProto.read()
             makeDeviceClassHeader(deviceText, f)
             makeDeviceClassSource(deviceText, f)
+            deviceNames.append(f)
 
         break
 
+    deviceManagerDeviceFromName(deviceNames)
 
 def drivers():
     pathDrivers = "./PROTO_DRIVERS"

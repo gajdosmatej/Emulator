@@ -10,21 +10,6 @@ DeviceManager::DeviceManager(Editor * w, Controller * IO){
 
 }
 
-
-Device * DeviceManager::deviceFromName(QString name){
-
-    if(name == "Head"){
-
-        return new Head();
-
-    }else{
-
-        return new ErrorDevice();
-
-    }
-
-}
-
 void DeviceManager::proceed(){
 
   //this->connectDevice(new Head(deviceEditor), 0);
@@ -76,7 +61,7 @@ void DeviceManager::proceed(){
 
 //dej portu v radici referenci na zarizeni
 void DeviceManager::connectDevice(Device * device, int port){
-QTextStream o(stdout);  o<<"yee";
+
     this->controller->PORTS[port]->device = device;
 
 }
