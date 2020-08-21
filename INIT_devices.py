@@ -18,6 +18,7 @@ def init():
     sourceDriver.write("//AUTOMATICKY VYGENEROVANE\n\n#include \"classes.h\"\n\n")
     sourceDriver.close()
 
+#--------------------------------------------------------------------------
 
 def getVariable(text, substr, ending):
 
@@ -28,12 +29,26 @@ def getVariable(text, substr, ending):
     return text[i2:i3]
 
 
-def getFunctionName(text):
+def getFunctionNameAndType(text):
 
     i2 = text.index("):")
     i1 = text.rindex(";", 0, i2)
 
     return text[i1+1:i2+1]
+
+def getFunctionName(text):
+
+    nameAndType = getFunctionNameAndType(text)
+    name = nameAndType[nameAndType.index(" ") + 1 :]
+    return name
+
+def getFunctionType(text):
+
+    nameAndType = getFunctionNameAndType(text)
+    type = nameAndType[: nameAndType.index(" ")+1]
+    return type
+
+#--------------------------------------------------------------------------
 
 def deviceManagerDeviceFromName(deviceNames):
     text = "#include \"classes.h\""
@@ -82,7 +97,7 @@ def makeDriverClassHeader(prototypeText, className):
     tempText = prototypeText
     while "):" in tempText:
 
-        classHeader += getFunctionName(tempText) + ";"
+        classHeader += getFunctionNameAndType(tempText) + ";"
         tempText = tempText[tempText.index("};") +1 : ]
 
 
@@ -101,10 +116,9 @@ def makeDriverClassSource(prototypeText, className):
     tempText = prototypeText
     while "):" in tempText:
 
-        wholeName = getFunctionName(tempText)
 
-        TYPE = wholeName[: wholeName.index(" ")+1]
-        NAME = wholeName[wholeName.index(" ") + 1 :]
+        TYPE = getFunctionType(tempText)
+        NAME = getFunctionName(tempText)
 
         classSource += TYPE + className + "::" + NAME
 
@@ -120,8 +134,8 @@ def makeDriverClassSource(prototypeText, className):
     tempText = prototypeText
     while "):" in tempText:
 
-        wholeName = getFunctionName(tempText)
-        NAME = wholeName[wholeName.index(" ") + 1 : wholeName.index("(")]
+        NAME = getFunctionName(tempText)
+        NAME = NAME[ : NAME.index("(")]
 
         if NAME == "processOutput":
             tempText = tempText[tempText.index("};") +1 : ]
@@ -140,8 +154,8 @@ def makeDriverClassSource(prototypeText, className):
     tempText = prototypeText
     while "):" in tempText:
 
-        wholeName = getFunctionName(tempText)
-        NAME = wholeName[wholeName.index(" ") + 1 : wholeName.index("(")]
+        NAME = getFunctionName(tempText)
+        NAME = NAME[: NAME.index("(")]
 
         if NAME == "processOutput":
             tempText = tempText[tempText.index("};") +1 : ]
@@ -195,6 +209,7 @@ def makeDeviceClassSource(prototypeText, className):
     header.write(classSource)
     header.close()
 
+#--------------------------------------------------------------------------
 
 def devices():
     pathDevices = "./PROTO_DEVICES"
@@ -231,6 +246,8 @@ def drivers():
         break
 
     makeDriverLibraryConstructor(driverNames)
+
+#--------------------------------------------------------------------------
 
 init()
 devices()
