@@ -1,16 +1,5 @@
 #include "classes.h"
 
-Error::Error(){
-
-
-
-}
-
-QVector<QString> Error::getVector_string(){ return this->E_VECTOR_STRING; }
-int Error::getInt(){  return this->E_INT; }
-float Error::getFloat(){  return this->E_FLOAT; }
-QString Error::getString(){ return this->E_STRING;  }
-
 
 Queue::Queue(){
 
@@ -124,7 +113,7 @@ void Arguments::addArgument(QString arg){
 
 QString Arguments::getArgument(int position){
 
-  if(position >= this->argsVector.length()){  return (new Error)->getString(); }
+  if(position >= this->argsVector.length()){  return "Error"; }
   return this->argsVector[position];
 
 }
@@ -207,7 +196,7 @@ ProcessLoop::ProcessLoop(Controller * controller, DeviceWindowWrapper * deviceWi
   this->timer = new QTimer(this);
   QObject::connect(this->timer, &QTimer::timeout, this, [deviceWindowWrapper, controller, this](){ this->cycle(controller, deviceWindowWrapper);  } );
   this->queue = nullptr;
-  
+
 }
 
 void ProcessLoop::cycle(Controller * controller, DeviceWindowWrapper * deviceWindowWrapper)
